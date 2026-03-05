@@ -1,0 +1,55 @@
+---
+import '../styles/global.css';
+import '../styles/layout.css';
+import '../styles/components.css';
+import BackgroundEffect from '../components/BackgroundEffect.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Obvius Digital — More Than Marketing',
+  description = 'We help small and medium-sized businesses show up with confidence, communicate clearly, and grow intentionally.',
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <title>{title}</title>
+
+    <!-- Urbanist — body/secondary font (Google Fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/obviuous_idents_1x/obvius_eye-red.png" />
+
+    <!-- Google Analytics GA4 -->
+    <!-- GA_MEASUREMENT_ID_PLACEHOLDER -->
+    <!-- To activate: replace this comment block with the GA4 snippet using your G-XXXXXXXXXX measurement ID -->
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://obviusdigital.ca" />
+  </head>
+  <body>
+    <BackgroundEffect />
+    <div class="page-wrap">
+      <slot name="header" />
+      <main class="page-main">
+        <slot />
+      </main>
+      <slot name="footer" />
+    </div>
+  </body>
+</html>

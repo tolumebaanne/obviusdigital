@@ -1,0 +1,115 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<BaseLayout
+  title={`${post.data.title} — Obvius Digital Blog`}
+  description={post.data.description || `Read "${post.data.title}" on the Obvius Digital blog.`}
+>
+  <Header slot="header" />
+
+  <article style="padding-block: var(--space-lg);">
+    <div class="container container--narrow">
+
+      <!-- Post meta -->
+      <header style="margin-bottom: var(--space-md);">
+        {post.data.tags && post.data.tags.length > 0 && (
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            {post.data.tags.map((tag: string) => (
+              <span style="font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-red); background: rgba(192,57,43,0.1); padding: 3px 10px; border-radius: 100px;">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+        <h1 style="font-size: clamp(1.75rem, 5vw, 2.75rem); line-height: 1.1; margin-bottom: 1rem;">{post.data.title}</h1>
+        <p style="font-size: 0.875rem; color: var(--color-grey-mid);">
+          {post.data.pubDate.toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' })}
+          {post.data.author && ` · ${post.data.author}`}
+        </p>
+      </header>
+
+      <!-- Post content -->
+      <div class="blog-post-content" style="
+        font-size: 1.0625rem;
+        line-height: 1.85;
+        color: var(--color-grey-dark);
+      ">
+        <Content />
+      </div>
+
+      <!-- Back to blog -->
+      <div style="margin-top: var(--space-lg); padding-top: var(--space-md); border-top: 1px solid rgba(0,0,0,0.08);">
+        <a href="/blog" style="font-size: 0.875rem; font-weight: 700; color: var(--color-red);">← Back to Blog</a>
+      </div>
+
+    </div>
+  </article>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .blog-post-content :global(h2),
+  .blog-post-content :global(h3),
+  .blog-post-content :global(h4) {
+    color: var(--color-black);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .blog-post-content :global(p) {
+    margin-bottom: 1.25rem;
+  }
+  .blog-post-content :global(ul),
+  .blog-post-content :global(ol) {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .blog-post-content :global(ol) {
+    list-style: decimal;
+  }
+  .blog-post-content :global(li) {
+    margin-bottom: 0.35rem;
+  }
+  .blog-post-content :global(a) {
+    color: var(--color-red);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .blog-post-content :global(blockquote) {
+    border-left: 4px solid var(--color-red);
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: var(--color-grey-dark);
+  }
+  .blog-post-content :global(code) {
+    background-color: var(--color-grey-light);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .blog-post-content :global(pre code) {
+    background: none;
+    padding: 0;
+  }
+  .blog-post-content :global(img) {
+    border-radius: var(--radius-md);
+    margin: 1.5rem 0;
+  }
+</style>

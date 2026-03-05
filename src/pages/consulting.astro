@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import ServiceDetail from '../components/ServiceDetail.astro';
+import ServicesContactForm from '../components/ServicesContactForm.astro';
+---
+
+<BaseLayout
+  title="Consulting — Obvius Digital"
+  description="One-on-one guidance to help you make smarter marketing decisions. Consulting by Obvius Digital."
+>
+  <Header slot="header" />
+
+  <PageHero
+    label="Consulting"
+    heading="Make Smarter Marketing Decisions"
+    tagline="One-on-one strategic sessions designed to give your business clarity and direction."
+  />
+
+  <ServiceDetail serviceName="Consulting" />
+  <ServicesContactForm />
+
+  <Footer slot="footer" />
+</BaseLayout>

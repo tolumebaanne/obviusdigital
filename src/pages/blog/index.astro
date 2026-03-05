@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/PageHero.astro';
+
+// Get all non-draft posts, sorted newest first
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout
+  title="Blog — Obvius Digital"
+  description="Insights, tips, and guides from the Obvius Digital team on digital marketing, media production, and growing a small business."
+>
+  <Header slot="header" />
+
+  <PageHero
+    label="Blog"
+    heading="Insights from Obvius Digital"
+    tagline="Tips, guides, and perspectives on digital marketing, media, and growing a business with intention."
+  />
+
+  <section class="blog-index section">
+    <div class="container">
+      {posts.length === 0 ? (
+        <div style="text-align: center; padding: 4rem 0;">
+          <p style="color: var(--color-grey-mid); font-size: 1rem;">No posts yet — check back soon.</p>
+        </div>
+      ) : (
+        <div class="blog-grid">
+          {posts.map((post) => (
+            <a href={`/blog/${post.slug}`} class="blog-card" style="text-decoration: none; color: inherit;">
+              <span class="blog-card__date">
+                {post.data.pubDate.toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </span>
+              <h2 class="blog-card__title">{post.data.title}</h2>
+              {post.data.description && (
+                <p style="font-size: 0.9375rem; color: var(--color-grey-dark); line-height: 1.65; margin-top: 0.5rem;">
+                  {post.data.description}
+                </p>
+              )}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>

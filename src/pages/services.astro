@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import ServiceTiles from '../components/ServiceTiles.astro';
+import FAQ from '../components/FAQ.astro';
+import ServicesContactForm from '../components/ServicesContactForm.astro';
+---
+
+<BaseLayout
+  title="Our Services — Obvius Digital"
+  description="360 Media Production, Digital Marketing, Consulting, Training, and Website Development. Full-service digital agency for small and medium-sized businesses."
+>
+  <Header slot="header" />
+
+  <PageHero
+    label="What We Do"
+    heading="What We Do at Obvius Digital"
+    tagline="A complete suite of digital services — designed for small and medium-sized businesses who want to show up with confidence."
+  >
+    <div style="margin-top: 2rem; width: 100%; height: 160px; background: rgba(255,255,255,0.04); border-radius: 8px; border: 1px dashed rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;">
+      <span style="color: rgba(255,255,255,0.25); font-size: 0.8125rem; letter-spacing: 0.08em; text-transform: uppercase;">[PLACEHOLDER] Hero Graphic</span>
+    </div>
+  </PageHero>
+
+  <ServiceTiles />
+  <FAQ />
+  <ServicesContactForm />
+
+  <Footer slot="footer" />
+</BaseLayout>

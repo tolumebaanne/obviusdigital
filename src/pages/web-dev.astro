@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import ServiceDetail from '../components/ServiceDetail.astro';
+import ServicesContactForm from '../components/ServicesContactForm.astro';
+---
+
+<BaseLayout
+  title="Website Development — Obvius Digital"
+  description="Clean, purposeful websites built to represent your brand. Website Development by Obvius Digital."
+>
+  <Header slot="header" />
+
+  <PageHero
+    label="Website Development"
+    heading="Websites Built to Represent Your Brand"
+    tagline="Clean, purposeful, and performance-focused — built for small businesses who want a site that actually does its job."
+  />
+
+  <ServiceDetail serviceName="Website Development" />
+  <ServicesContactForm />
+
+  <Footer slot="footer" />
+</BaseLayout>

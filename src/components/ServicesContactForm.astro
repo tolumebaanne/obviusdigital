@@ -1,0 +1,114 @@
+---
+// Services contact form — includes project-specific dropdown
+---
+
+<section class="contact-form section">
+  <div class="container">
+    <div class="contact-form__inner">
+      <span class="section-label">Start Your Project</span>
+      <h2 class="section-heading text-white">Tell Us About Your Project</h2>
+      <p style="color: rgba(255,255,255,0.6); margin-bottom: 2rem; font-size: 0.9375rem;">
+        Share some details about your business and what you're looking to achieve. We'll follow up with next steps.
+      </p>
+
+      <form id="services-contact-form" novalidate>
+        <div class="form-group">
+          <label for="svc-name">Your Name</label>
+          <input
+            type="text"
+            id="svc-name"
+            name="name"
+            placeholder="Jane Smith"
+            required
+            autocomplete="name"
+          />
+        </div>
+        <div class="form-group">
+          <label for="svc-email">Email Address</label>
+          <input
+            type="email"
+            id="svc-email"
+            name="email"
+            placeholder="jane@yourbusiness.com"
+            required
+            autocomplete="email"
+          />
+        </div>
+        <div class="form-group">
+          <label for="svc-business">Business Name</label>
+          <input
+            type="text"
+            id="svc-business"
+            name="business"
+            placeholder="Your Business Name"
+            autocomplete="organization"
+          />
+        </div>
+        <div class="form-group">
+          <label for="svc-service">Service You're Interested In</label>
+          <select id="svc-service" name="service">
+            <option value="" disabled selected>Select a service...</option>
+            <option value="360 Media Production">360 Media Production</option>
+            <option value="Digital Marketing">Digital Marketing</option>
+            <option value="Consulting">Consulting</option>
+            <option value="Training">Training</option>
+            <option value="Website Development">Website Development</option>
+            <option value="Not Sure Yet">Not Sure Yet — Let's Talk</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="svc-message">Project Details</label>
+          <textarea
+            id="svc-message"
+            name="message"
+            placeholder="Tell us about your business, your goals, your timeline, and any details that will help us understand what you need..."
+            required
+          ></textarea>
+        </div>
+        <div class="form__submit">
+          <button type="submit" class="btn btn--primary" id="svc-submit">
+            Request a Proposal
+          </button>
+        </div>
+        <div class="form-message" id="svc-form-message" role="alert" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('services-contact-form') as HTMLFormElement | null;
+  const submitBtn = document.getElementById('svc-submit') as HTMLButtonElement | null;
+  const messageEl = document.getElementById('svc-form-message');
+
+  if (form && submitBtn && messageEl) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      messageEl.className = 'form-message';
+      messageEl.textContent = '';
+
+      try {
+        const data = new FormData(form);
+        const res = await fetch('/contact.php', { method: 'POST', body: data });
+        const json = await res.json();
+
+        if (json.success) {
+          messageEl.textContent = '✓ Proposal request sent! We\'ll review your details and follow up shortly.';
+          messageEl.classList.add('success');
+          form.reset();
+        } else {
+          messageEl.textContent = json.message || 'Something went wrong. Please try again.';
+          messageEl.classList.add('error');
+        }
+      } catch {
+        messageEl.textContent = 'Network error. Please try again or contact us directly.';
+        messageEl.classList.add('error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Request a Proposal';
+      }
+    });
+  }
+</script>

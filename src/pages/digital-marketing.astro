@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import ServiceDetail from '../components/ServiceDetail.astro';
+import ServicesContactForm from '../components/ServicesContactForm.astro';
+---
+
+<BaseLayout
+  title="Digital Marketing — Obvius Digital"
+  description="Strategic online presence across the platforms your audience actually uses. Digital Marketing by Obvius Digital."
+>
+  <Header slot="header" />
+
+  <PageHero
+    label="Digital Marketing"
+    heading="Show Up Where Your Audience Actually Is"
+    tagline="Strategic online presence built on what actually works for your industry, your audience, and your goals."
+  />
+
+  <ServiceDetail serviceName="Digital Marketing" />
+  <ServicesContactForm />
+
+  <Footer slot="footer" />
+</BaseLayout>

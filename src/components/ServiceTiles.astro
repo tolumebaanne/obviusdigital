@@ -1,0 +1,54 @@
+---
+const services = [
+  {
+    name: '360 Media Production',
+    description: 'Video, graphics, and photography that communicate who you are.',
+    href: '/production',
+    icon: '🎬',
+  },
+  {
+    name: 'Digital Marketing',
+    description: 'Strategic online presence across the platforms your audience actually uses.',
+    href: '/digital-marketing',
+    icon: '📣',
+  },
+  {
+    name: 'Consulting',
+    description: 'One-on-one guidance to help you make smarter marketing decisions.',
+    href: '/consulting',
+    icon: '🤝',
+  },
+  {
+    name: 'Training',
+    description: 'Hands-on sessions for small teams managing their own content.',
+    href: '/training',
+    icon: '🎓',
+  },
+  {
+    name: 'Website Development',
+    description: 'Clean, purposeful websites built to represent your brand.',
+    href: '/web-dev',
+    icon: '💻',
+  },
+];
+---
+
+<section class="service-tiles section">
+  <div class="container">
+    <span class="section-label">What We Do</span>
+    <h2 class="section-heading">Our Services</h2>
+    <p style="color: var(--color-grey-dark); max-width: 60ch; margin-bottom: 2rem; font-size: 1rem;">
+      We offer the full spectrum of digital services small businesses need — under one roof, with one team that knows your brand.
+    </p>
+    <div class="service-tiles__grid">
+      {services.map((service) => (
+        <div class="service-tile">
+          <span class="service-tile__icon" aria-hidden="true">{service.icon}</span>
+          <h3 class="service-tile__name">{service.name}</h3>
+          <p class="service-tile__desc">{service.description}</p>
+          <a href={service.href} class="btn btn--outline-red btn--sm">View Service</a>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,86 @@
+---
+const sitemapLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Our Work', href: '/work' },
+  { label: 'Contact Us', href: '/contact' },
+];
+
+const servicesLinks = [
+  { label: '360 Media Production', href: '/production' },
+  { label: 'Digital Marketing', href: '/digital-marketing' },
+  { label: 'Consulting', href: '/consulting' },
+  { label: 'Training', href: '/training' },
+  { label: 'Website Development', href: '/web-dev' },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+
+      <!-- Column 1: Logo + USP + Email signup -->
+      <div class="footer-col">
+        <a href="/" aria-label="Obvius Digital — Home">
+          <img
+            src="/images/obviuous_idents_1x/obvius_digital_logo-red_white.png"
+            alt="Obvius Digital"
+            class="footer-logo"
+            width="140"
+            height="32"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+          />
+          <span style="display:none; color: var(--color-white); font-family: var(--font-primary); font-weight: 700; font-size: 1rem;">OBVIUS DIGITAL</span>
+        </a>
+        <p class="footer-usp">More than marketing. A partner in your growth.</p>
+        <form class="footer-email-form" id="footer-email-form" novalidate>
+          <input
+            type="email"
+            name="email"
+            placeholder="Your email address"
+            aria-label="Email address for updates"
+            id="footer-email-input"
+          />
+          <button type="submit">Stay Updated</button>
+        </form>
+      </div>
+
+      <!-- Column 2: Sitemap -->
+      <div class="footer-col footer-nav">
+        <h4>Sitemap</h4>
+        <ul role="list">
+          {sitemapLinks.map((link) => (
+            <li><a href={link.href}>{link.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Column 3: Services -->
+      <div class="footer-col footer-nav">
+        <h4>Services</h4>
+        <ul role="list">
+          {servicesLinks.map((link) => (
+            <li><a href={link.href}>{link.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Column 4: Contact -->
+      <div class="footer-col footer-contact">
+        <h4>Contact</h4>
+        <p><a href="tel:+14168844080">+1 416 884 4080</a></p>
+        <p><a href="mailto:hello@obviusdigital.ca">hello@obviusdigital.ca</a></p>
+        <p><a href="https://instagram.com/obviusdigital" target="_blank" rel="noopener noreferrer">@obviusdigital</a></p>
+        <p style="margin-top: 0.75rem; color: var(--color-grey-mid); font-size: 0.8125rem;">Toronto, Canada</p>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; {year} Obvius Digital. All rights reserved.</p>
+      <p>Built with intention.</p>
+    </div>
+  </div>
+</footer>

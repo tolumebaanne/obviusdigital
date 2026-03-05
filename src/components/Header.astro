@@ -1,0 +1,87 @@
+---
+const navLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Services', href: '/services' },
+  { label: 'Our Work', href: '/work' },
+  { label: 'Contact Us', href: '/contact' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <!-- Logo -->
+    <a href="/" class="site-logo" aria-label="Obvius Digital — Home">
+      <img
+        src="/images/obviuous_idents_1x/obvius_digital_logo-red_white.png"
+        alt="Obvius Digital"
+        width="160"
+        height="36"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+      />
+      <span style="display:none; color: var(--color-white); font-family: var(--font-primary); font-weight: 700; font-size: 1.1rem; letter-spacing: 0.04em;">OBVIUS DIGITAL</span>
+    </a>
+
+    <!-- Mobile toggle -->
+    <button
+      class="nav-toggle"
+      aria-label="Open navigation menu"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      id="nav-toggle"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+      <ul role="list">
+        {navLinks.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              class={currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href)) ? 'is-active' : ''}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const nav = document.getElementById('site-nav');
+
+  if (toggle && nav) {
+    toggle.addEventListener('click', () => {
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+      toggle.setAttribute('aria-label', expanded ? 'Open navigation menu' : 'Close navigation menu');
+      nav.classList.toggle('is-open', !expanded);
+    });
+
+    // Close nav when a link is clicked (mobile)
+    nav.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open navigation menu');
+        nav.classList.remove('is-open');
+      });
+    });
+
+    // Close nav on outside click
+    document.addEventListener('click', (e) => {
+      if (!toggle.contains(e.target as Node) && !nav.contains(e.target as Node)) {
+        toggle.setAttribute('aria-expanded', 'false');
+        nav.classList.remove('is-open');
+      }
+    });
+  }
+</script>

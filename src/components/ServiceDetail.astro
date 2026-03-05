@@ -1,0 +1,30 @@
+---
+interface Props {
+  serviceName: string;
+  tagline?: string;
+}
+
+const { serviceName, tagline } = Astro.props;
+---
+
+<section class="service-detail section">
+  <div class="container">
+    <h2 class="service-detail__headline">[PLACEHOLDER] {serviceName} — Main Headline</h2>
+    <div class="service-detail__body">
+      <p>[PLACEHOLDER] First paragraph — describe what this service is and who it's for. 2–3 sentences.</p>
+      <p>[PLACEHOLDER] Second paragraph — describe the approach or methodology. What makes the Obvius way of delivering this service different?</p>
+      <p>[PLACEHOLDER] Third paragraph (optional) — outcomes, results, or what the client can expect after working with Obvius on this service.</p>
+    </div>
+
+    <div class="service-detail__deliverables">
+      <h4>What's Included</h4>
+      <ul>
+        <li>[PLACEHOLDER] Deliverable or service component 1</li>
+        <li>[PLACEHOLDER] Deliverable or service component 2</li>
+        <li>[PLACEHOLDER] Deliverable or service component 3</li>
+        <li>[PLACEHOLDER] Deliverable or service component 4</li>
+        <li>[PLACEHOLDER] Deliverable or service component 5</li>
+      </ul>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import ServiceDetail from '../components/ServiceDetail.astro';
+import ServicesContactForm from '../components/ServicesContactForm.astro';
+---
+
+<BaseLayout
+  title="360 Media Production — Obvius Digital"
+  description="Professional video, graphics, and photography that communicate who you are. 360 Media Production by Obvius Digital."
+>
+  <Header slot="header" />
+
+  <PageHero
+    label="360 Media Production"
+    heading="Video, Graphics & Photography That Communicate Who You Are"
+    tagline="We capture your brand in motion and in image — and we make sure it says exactly what it needs to say."
+  />
+
+  <ServiceDetail serviceName="360 Media Production" />
+  <ServicesContactForm />
+
+  <Footer slot="footer" />
+</BaseLayout>

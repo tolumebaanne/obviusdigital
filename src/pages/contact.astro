@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactInfo from '../components/ContactInfo.astro';
+import ContactButtons from '../components/ContactButtons.astro';
+import ContactForm from '../components/ContactForm.astro';
+---
+
+<BaseLayout
+  title="Contact Us — Obvius Digital"
+  description="Get in touch with Obvius Digital. Call, email, or DM us on Instagram. We'd love to hear about your business and how we can help."
+>
+  <Header slot="header" />
+
+  <PageHero
+    label="Contact"
+    heading="Get in Touch With Us"
+    tagline="Ready to get started? We'd love to hear from you."
+  />
+
+  <ContactInfo />
+  <ContactButtons />
+  <ContactForm />
+
+  <Footer slot="footer" />
+</BaseLayout>

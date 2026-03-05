@@ -1,0 +1,40 @@
+---
+const faqs = [
+  {
+    question: '[PLACEHOLDER] FAQ Question 1 — e.g., "What types of businesses do you work with?"',
+    answer: '[PLACEHOLDER] FAQ Answer 1 — Add 4–6 FAQ questions and answers. These must come from Tolu before launch.',
+  },
+  {
+    question: '[PLACEHOLDER] FAQ Question 2 — e.g., "How does your process work?"',
+    answer: '[PLACEHOLDER] FAQ Answer 2.',
+  },
+  {
+    question: '[PLACEHOLDER] FAQ Question 3 — e.g., "How long does a typical project take?"',
+    answer: '[PLACEHOLDER] FAQ Answer 3.',
+  },
+  {
+    question: '[PLACEHOLDER] FAQ Question 4 — e.g., "Do you work with businesses outside of Toronto?"',
+    answer: '[PLACEHOLDER] FAQ Answer 4.',
+  },
+];
+---
+
+<section class="faq section">
+  <div class="container container--narrow">
+    <span class="section-label">FAQ</span>
+    <h2 class="section-heading">Common Questions</h2>
+    <p style="color: var(--color-grey-dark); margin-bottom: 2rem; font-size: 1rem;">
+      Everything you want to know about working with Obvius Digital.
+    </p>
+    <div class="faq__list">
+      {faqs.map((faq, i) => (
+        <details class="faq-item" id={`faq-${i + 1}`}>
+          <summary>{faq.question}</summary>
+          <div class="faq-item__body">
+            <p>{faq.answer}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

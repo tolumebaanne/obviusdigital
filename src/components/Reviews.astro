@@ -1,0 +1,40 @@
+---
+const reviews = [
+  {
+    text: '[PLACEHOLDER] — Client review text will go here. Minimum 3 reviews needed before launch. Real client testimonials will replace this placeholder.',
+    author: '[PLACEHOLDER] Client Name',
+  },
+  {
+    text: '[PLACEHOLDER] — Another client review will appear here. We helped this business show up with confidence and grow intentionally.',
+    author: '[PLACEHOLDER] Client Name',
+  },
+  {
+    text: '[PLACEHOLDER] — Third client review. Our clients are small and medium-sized businesses who chose Obvius as a genuine partner in their growth.',
+    author: '[PLACEHOLDER] Client Name',
+  },
+];
+---
+
+<section class="reviews section">
+  <div class="container">
+    <span class="section-label">Client Reviews</span>
+    <h2 class="section-heading">What Our Clients Say</h2>
+
+    <!-- Text reviews (current) -->
+    <div class="reviews__grid">
+      {reviews.map((review) => (
+        <div class="review-card">
+          <p class="review-card__text">"{review.text}"</p>
+          <span class="review-card__author">— {review.author}</span>
+        </div>
+      ))}
+    </div>
+
+    <!-- Google Reviews widget placeholder — replace this div with the Google Reviews embed when ready -->
+    <div class="reviews__widget-placeholder" id="google-reviews-widget">
+      <p style="font-size: 0.8125rem; color: var(--color-grey-mid); letter-spacing: 0.06em; text-transform: uppercase;">
+        [PLACEHOLDER] Google Reviews widget will load here
+      </p>
+    </div>
+  </div>
+</section>

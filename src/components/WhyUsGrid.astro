@@ -1,0 +1,43 @@
+---
+const cells = [
+  {
+    heading: 'Partner in Growth',
+    text: 'We don\'t hand over a deliverable and disappear. We stay in your corner — invested in what happens after the work is done.',
+  },
+  {
+    heading: 'Built for Small Business',
+    text: 'Everything we do is sized for startups and SMBs. No enterprise pricing. No corporate runaround. Just work that fits your reality.',
+  },
+  {
+    heading: 'Reliable & Consistent',
+    text: 'You\'ll always know where your project stands. We communicate clearly, meet our commitments, and show up when we say we will.',
+  },
+  {
+    heading: 'Agile to Trends',
+    text: 'Digital moves fast. We stay current so you don\'t have to. Our work reflects what\'s working right now — not what worked three years ago.',
+  },
+  {
+    heading: 'Identity-Driven Work',
+    text: 'We take time to understand your brand before we touch a single deliverable. Every piece of work we produce reflects who you actually are.',
+  },
+  {
+    heading: 'Listen → Create → Support',
+    text: 'Our process is built around you. We listen first, create with intention, and support you through to results.',
+  },
+];
+---
+
+<section class="why-us-grid section">
+  <div class="container">
+    <span class="section-label" style="color: rgba(192,57,43,0.85);">Our Difference</span>
+    <h2 class="section-heading" style="color: var(--color-white);">Why Businesses Choose Obvius</h2>
+    <div class="why-us-grid__cells">
+      {cells.map((cell) => (
+        <div class="why-us-cell">
+          <h3 class="why-us-cell__heading">{cell.heading}</h3>
+          <p class="why-us-cell__text">{cell.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

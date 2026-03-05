@@ -1,0 +1,34 @@
+---
+// ClientLogos — client/partner logo strip
+// NOTE: Confirm with Tolu before launch which of the larger brands (Pearson, BAT, GE, Red Bull)
+// should be included — these may be past employer/academic associations vs. direct client work.
+
+const logos = [
+  { src: '/images/trusted_by/Sandra_McTavish_logoArtboard-1-300x199.png', alt: 'Sandra McTavish' },
+  { src: '/images/trusted_by/wowconnect_logo.webp', alt: 'WOW Connect' },
+  { src: '/images/trusted_by/Tip-Top-Closets-logo.jpg', alt: 'Tip Top Closets' },
+  { src: '/images/trusted_by/reelrushfishing_logo_transparent.png', alt: 'Reel Rush Fishing Charters' },
+  { src: '/images/trusted_by/shoufany-custom-woodworking-logo.png', alt: 'Shoufany Custom Woodworking' },
+  { src: '/images/trusted_by/Pearson_Logo_2025.svg.png', alt: 'Pearson' },
+  { src: '/images/trusted_by/British-American-Tobacco-Logo.webp', alt: 'British American Tobacco' },
+  { src: '/images/trusted_by/generalelectric.png', alt: 'General Electric' },
+  { src: '/images/trusted_by/red_bull.png', alt: 'Red Bull' },
+];
+---
+
+<section class="client-logos">
+  <div class="container">
+    <p class="client-logos__label">Trusted by businesses like yours</p>
+    <div class="client-logos__strip">
+      {logos.map((logo) => (
+        <img
+          src={logo.src}
+          alt={logo.alt}
+          class="client-logo-img"
+          loading="lazy"
+        />
+      ))}
+    </div>
+  </div>
+</section>
+

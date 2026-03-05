@@ -1,0 +1,266 @@
+/* ===========================
+   CSS Variables & Root
+   =========================== */
+
+:root {
+  /* text */
+  --font-primary: 'Rowdies', sans-serif;      /* Display — headings, nav, brand, buttons */
+  --font-secondary: 'Urbanist', sans-serif;   /* Body — paragraphs, labels, UI text */
+
+  /* color */
+  --color-red: #C0392B;
+  --color-red-dark: #A93226;
+  --color-red-light: #E74C3C;
+  --color-black: #0A0A0A;
+  --color-black-soft: #111111;
+  --color-black-mid: #1A1A1A;
+  --color-white: #FFFFFF;
+  --color-white-soft: #F9F9F9;
+  --color-grey-light: #F5F5F5;
+  --color-grey-mid: #999999;
+  --color-grey-dark: #444444;
+  --color-overlay: rgba(10, 10, 10, 0.72);
+  --color-overlay-light: rgba(10, 10, 10, 0.4);
+
+  /* box model */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 4rem;
+  --space-xl: 8rem;
+
+  /* border */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-pill: 100px;
+
+  /* transition */
+  --transition-base: 220ms ease;
+  --transition-slow: 400ms ease;
+}
+
+/* ===========================
+   General Reset
+   =========================== */
+
+*, *::before, *::after {
+  /* box model */
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* text */
+  font-size: 16px;
+  /* other */
+  scroll-behavior: smooth;
+}
+
+img, video, svg {
+  /* box model */
+  max-width: 100%;
+  /* display */
+  display: block;
+}
+
+a {
+  /* text */
+  text-decoration: none;
+  /* color */
+  color: inherit;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button, input, textarea, select {
+  /* text */
+  font-family: inherit;
+  font-size: inherit;
+  /* color */
+  color: inherit;
+  /* border */
+  border: none;
+  /* other */
+  background: none;
+  appearance: none;
+}
+
+/* ===========================
+   Body Styles
+   =========================== */
+
+body {
+  /* text */
+  font-family: var(--font-secondary);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.7;
+  /* color */
+  color: var(--color-black);
+  background-color: var(--color-white);
+}
+
+/* ===========================
+   Typography
+   =========================== */
+
+@font-face {
+  font-family: 'Rowdies';
+  src: url('/fonts/Rowdies-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Rowdies';
+  src: url('/fonts/Rowdies-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Rowdies';
+  src: url('/fonts/Rowdies-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  /* text */
+  font-family: var(--font-primary);
+  font-weight: 700;
+  line-height: 1.15;
+  /* color */
+  color: var(--color-black);
+}
+
+h1 { font-size: clamp(2rem, 6vw, 3.75rem); }
+h2 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
+h3 { font-size: clamp(1.125rem, 2.5vw, 1.75rem); }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
+p {
+  /* text */
+  font-family: var(--font-secondary);
+  font-weight: 400;
+  line-height: 1.75;
+}
+
+strong {
+  font-weight: 700;
+}
+
+.text-red { color: var(--color-red); }
+.text-white { color: var(--color-white); }
+.text-mid { color: var(--color-grey-mid); }
+
+/* ===========================
+   Utility Classes
+   =========================== */
+
+.visually-hidden {
+  /* box model */
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  /* border */
+  border: 0;
+  /* positioning */
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.container {
+  /* box model */
+  width: 100%;
+  max-width: 1200px;
+  padding-inline: var(--space-sm);
+  /* positioning */
+  margin-inline: auto;
+}
+
+.container--narrow {
+  /* box model */
+  max-width: 800px;
+}
+
+.section {
+  /* box model */
+  padding-block: var(--space-lg);
+}
+
+.section--dark {
+  /* color */
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+.section--dark h1,
+.section--dark h2,
+.section--dark h3,
+.section--dark h4 {
+  /* color */
+  color: var(--color-white);
+}
+
+.section--grey {
+  /* color */
+  background-color: var(--color-grey-light);
+}
+
+.section-label {
+  /* text */
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  /* color */
+  color: var(--color-red);
+  /* box model */
+  margin-bottom: var(--space-xs);
+  /* display */
+  display: block;
+}
+
+.section-heading {
+  /* box model */
+  margin-bottom: var(--space-md);
+}
+
+.text-center { text-align: center; }
+.text-left   { text-align: left; }
+
+/* ===========================
+   Accessibility Styles
+   =========================== */
+
+:focus-visible {
+  /* border */
+  outline: 3px solid var(--color-red);
+  outline-offset: 3px;
+  /* border */
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    /* animation */
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    /* transition */
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

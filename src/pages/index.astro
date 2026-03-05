@@ -1,17 +1,35 @@
 ---
-
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import HomeHero from '../components/HomeHero.astro';
+import ClientLogos from '../components/ClientLogos.astro';
+import BrandPromise from '../components/BrandPromise.astro';
+import ServiceTiles from '../components/ServiceTiles.astro';
+import WhyUsGrid from '../components/WhyUsGrid.astro';
+import PastWork from '../components/PastWork.astro';
+import FAQ from '../components/FAQ.astro';
+import Reviews from '../components/Reviews.astro';
+import ContactForm from '../components/ContactForm.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title="Obvius Digital — More Than Marketing. A Partner in Your Growth."
+  description="We help small and medium-sized businesses show up with confidence, communicate clearly, and grow intentionally. A full-service creative digital agency in Toronto."
+>
+  <Header slot="header" />
+
+  <HomeHero />
+  <ClientLogos />
+  <BrandPromise />
+  <div id="services">
+    <ServiceTiles />
+  </div>
+  <WhyUsGrid />
+  <PastWork />
+  <FAQ />
+  <Reviews />
+  <ContactForm />
+
+  <Footer slot="footer" />
+</BaseLayout>

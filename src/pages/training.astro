@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import ServiceDetail from '../components/ServiceDetail.astro';
+import ServicesContactForm from '../components/ServicesContactForm.astro';
+---
+
+<BaseLayout
+  title="Training — Obvius Digital"
+  description="Hands-on sessions for small teams managing their own content. Training by Obvius Digital."
+>
+  <Header slot="header" />
+
+  <PageHero
+    label="Training"
+    heading="Your Team, More Capable"
+    tagline="Hands-on digital marketing training designed for small teams who want to own their content strategy."
+  />
+
+  <ServiceDetail serviceName="Training" />
+  <ServicesContactForm />
+
+  <Footer slot="footer" />
+</BaseLayout>
