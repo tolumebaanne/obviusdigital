@@ -3,6 +3,7 @@ import '../styles/global.css';
 import '../styles/layout.css';
 import '../styles/components.css';
 import BackgroundEffect from '../components/BackgroundEffect.astro';
+import RfpModal from '../components/RfpModal.astro';
 
 interface Props {
   title?: string;
@@ -51,5 +52,6 @@ const {
       </main>
       <slot name="footer" />
     </div>
+    <RfpModal />
   </body>
 </html>

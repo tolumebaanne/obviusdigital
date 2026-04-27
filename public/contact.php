@@ -8,13 +8,21 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$name    = filter_input(INPUT_POST, 'name',    FILTER_SANITIZE_STRING);
-$email   = filter_input(INPUT_POST, 'email',   FILTER_SANITIZE_EMAIL);
-$message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING);
+// Get raw JSON payload if available (fetch API often sends JSON)
+$inputJSON = file_get_contents('php://input');
+$input = json_decode($inputJSON, TRUE);
 
-if (empty($name) || empty($email) || empty($message)) {
+if (is_array($input)) {
+    $_POST = array_merge($_POST, $input);
+}
+
+// Ensure required fields exist
+$name = isset($_POST['name']) ? filter_var($_POST['name'], FILTER_SANITIZE_STRING) : '';
+$email = isset($_POST['email']) ? filter_var($_POST['email'], FILTER_SANITIZE_EMAIL) : '';
+
+if (empty($name) || empty($email)) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'All fields are required']);
+    echo json_encode(['success' => false, 'message' => 'Name and email are required']);
     exit;
 }
 
@@ -24,9 +32,21 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
+// Build dynamic body
+$body = "New submission received:\n\n";
+foreach ($_POST as $key => $value) {
+    if (is_array($value)) {
+        $value = implode(', ', array_map('strip_tags', $value));
+    } else {
+        $value = strip_tags($value);
+    }
+    // Format key for readability (e.g. "business_name" -> "Business Name")
+    $formattedKey = ucwords(str_replace(['_', '-'], ' ', $key));
+    $body .= "$formattedKey: $value\n";
+}
+
 $to      = 'hello@obviusdigital.ca';
-$subject = 'New enquiry from ' . $name;
-$body    = "Name: $name\nEmail: $email\n\nMessage:\n$message";
+$subject = 'New Form Submission from ' . $name;
 $headers = "From: Obvius Digital <hello@obviusdigital.ca>\r\nReply-To: $name <$email>\r\nX-Mailer: PHP/" . phpversion();
 
 if (mail($to, $subject, $body, $headers)) {
