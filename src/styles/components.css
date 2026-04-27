@@ -1700,6 +1700,7 @@
   display: flex;
   gap: 0.5rem;
   align-items: flex-start;
+  margin-bottom: 0.35rem;
 }
 
 .rfp-country-select {
