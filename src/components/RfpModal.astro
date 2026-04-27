@@ -2,7 +2,7 @@
 // RfpModal.astro
 ---
 
-<div id="rfp-modal" class="rfp-modal-overlay hidden" aria-hidden="true" role="dialog">
+<div id="rfp-modal" class="rfp-modal-overlay rfp-hidden" aria-hidden="true" role="dialog">
     <div class="rfp-modal-container">
         <button id="rfp-close" class="rfp-close-btn" aria-label="Close modal">&times;</button>
         
@@ -43,7 +43,7 @@
             </div>
 
             <!-- STEP 2: Services -->
-            <div class="rfp-step hidden" data-step="2">
+            <div class="rfp-step rfp-hidden" data-step="2">
                 <fieldset>
                     <legend>Which services are you interested in exploring?</legend>
                     <p class="rfp-helper">Not sure yet? Select 'Web Design' and we can audit the rest.</p>
@@ -72,7 +72,7 @@
             </div>
 
             <!-- STEP 3: Investment -->
-            <div class="rfp-step hidden" data-step="3">
+            <div class="rfp-step rfp-hidden" data-step="3">
                 <fieldset>
                     <legend>What is your estimated investment for this project?</legend>
                     <p class="rfp-helper">
@@ -91,7 +91,7 @@
             </div>
 
             <!-- STEP 4: Timeline -->
-            <div class="rfp-step hidden" data-step="4">
+            <div class="rfp-step rfp-hidden" data-step="4">
                 <fieldset>
                     <legend>How soon are you looking to launch?</legend>
                     <p class="rfp-helper">e.g., "Ready to start Monday" or "Aiming for a summer rebrand"</p>
@@ -101,7 +101,7 @@
             </div>
 
             <!-- STEP 5: Contact Details -->
-            <div class="rfp-step hidden" data-step="5">
+            <div class="rfp-step rfp-hidden" data-step="5">
                 <fieldset>
                     <legend>Almost done. Where should we send your proposal?</legend>
                     
@@ -134,16 +134,16 @@
                 </fieldset>
             </div>
 
-            <div id="rfp-error" class="rfp-error hidden">Oops! We need this information to continue.</div>
+            <div id="rfp-error" class="rfp-error rfp-hidden">Oops! We need this information to continue.</div>
 
             <div class="rfp-modal-footer">
-                <button type="button" id="rfp-prev" class="rfp-btn-secondary hidden">Back</button>
+                <button type="button" id="rfp-prev" class="rfp-btn-secondary rfp-hidden">Back</button>
                 <button type="button" id="rfp-next" class="rfp-btn-primary">Next</button>
-                <button type="submit" id="rfp-submit" class="rfp-btn-primary hidden">Send My RFP</button>
+                <button type="submit" id="rfp-submit" class="rfp-btn-primary rfp-hidden">Send My RFP</button>
             </div>
         </form>
 
-        <div id="rfp-success" class="rfp-success hidden">
+        <div id="rfp-success" class="rfp-success rfp-hidden">
             <h3>Thanks! We'll reach out to you soon.</h3>
             <button type="button" id="rfp-close-success" class="rfp-btn-secondary mt-1">Close</button>
         </div>
@@ -173,14 +173,14 @@
         triggers.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                modal.classList.remove('hidden');
+                modal.classList.remove('rfp-hidden');
                 modal.setAttribute('aria-hidden', 'false');
                 document.body.style.overflow = 'hidden'; // Prevent scrolling
             });
         });
 
         const closeModal = () => {
-            modal.classList.add('hidden');
+            modal.classList.add('rfp-hidden');
             modal.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
         };
@@ -196,10 +196,10 @@
         const updateUI = () => {
             steps.forEach((stepEl, idx) => {
                 if (idx + 1 === currentStep) {
-                    stepEl.classList.remove('hidden');
+                    stepEl.classList.remove('rfp-hidden');
                     stepEl.classList.add('active');
                 } else {
-                    stepEl.classList.add('hidden');
+                    stepEl.classList.add('rfp-hidden');
                     stepEl.classList.remove('active');
                 }
             });
@@ -208,20 +208,20 @@
             progressFill.style.width = `${(currentStep / totalSteps) * 100}%`;
 
             if (currentStep === 1) {
-                prevBtn.classList.add('hidden');
+                prevBtn.classList.add('rfp-hidden');
             } else {
-                prevBtn.classList.remove('hidden');
+                prevBtn.classList.remove('rfp-hidden');
             }
 
             if (currentStep === totalSteps) {
-                nextBtn.classList.add('hidden');
-                submitBtn.classList.remove('hidden');
+                nextBtn.classList.add('rfp-hidden');
+                submitBtn.classList.remove('rfp-hidden');
             } else {
-                nextBtn.classList.remove('hidden');
-                submitBtn.classList.add('hidden');
+                nextBtn.classList.remove('rfp-hidden');
+                submitBtn.classList.add('rfp-hidden');
             }
 
-            errorMsg.classList.add('hidden');
+            errorMsg.classList.add('rfp-hidden');
         };
 
         const validateStep = (stepNum) => {
@@ -245,12 +245,26 @@
             return true;
         };
 
+        // Auto-advance for Step 1 radio buttons
+        const step1Radios = document.querySelectorAll('.rfp-step[data-step="1"] input[type="radio"]');
+        step1Radios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (validateStep(currentStep)) {
+                    // Small delay for UX so they see it was selected
+                    setTimeout(() => {
+                        currentStep++;
+                        updateUI();
+                    }, 250);
+                }
+            });
+        });
+
         nextBtn.addEventListener('click', () => {
             if (validateStep(currentStep)) {
                 currentStep++;
                 updateUI();
             } else {
-                errorMsg.classList.remove('hidden');
+                errorMsg.classList.remove('rfp-hidden');
             }
         });
 
@@ -262,7 +276,7 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!validateStep(currentStep)) {
-                errorMsg.classList.remove('hidden');
+                errorMsg.classList.remove('rfp-hidden');
                 return;
             }
 
@@ -291,26 +305,26 @@
                 });
 
                 if (response.ok) {
-                    form.classList.add('hidden');
-                    successMsg.classList.remove('hidden');
+                    form.classList.add('rfp-hidden');
+                    successMsg.classList.remove('rfp-hidden');
                     // Reset form for future opens
                     form.reset();
                     currentStep = 1;
                     updateUI();
-                    form.classList.remove('hidden');
-                    successMsg.classList.add('hidden');
+                    form.classList.remove('rfp-hidden');
+                    successMsg.classList.add('rfp-hidden');
                     closeModal();
                     // Optionally show a quick success toast or keep modal open with success message
-                    modal.classList.remove('hidden');
-                    form.classList.add('hidden');
-                    successMsg.classList.remove('hidden');
+                    modal.classList.remove('rfp-hidden');
+                    form.classList.add('rfp-hidden');
+                    successMsg.classList.remove('rfp-hidden');
                 } else {
                     throw new Error('Server error');
                 }
             } catch (error) {
                 console.error(error);
                 errorMsg.textContent = 'Something went wrong. Please try again.';
-                errorMsg.classList.remove('hidden');
+                errorMsg.classList.remove('rfp-hidden');
             } finally {
                 submitBtn.textContent = 'Send My RFP';
                 submitBtn.disabled = false;

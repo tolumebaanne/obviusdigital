@@ -1522,10 +1522,14 @@
   transition: opacity var(--transition-base), visibility var(--transition-base);
 }
 
-.rfp-modal-overlay.hidden {
+.rfp-modal-overlay.rfp-hidden {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+.rfp-hidden {
+  display: none !important;
 }
 
 .rfp-modal-container {
