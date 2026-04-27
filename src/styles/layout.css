@@ -55,6 +55,17 @@
   flex-shrink: 0;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-cta {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+}
+
 .nav-toggle {
   /* display */
   display: flex;
@@ -393,6 +404,10 @@
 @media (min-width: 900px) {
   .nav-toggle {
     /* display */
+    display: none;
+  }
+
+  .header-cta {
     display: none;
   }
 

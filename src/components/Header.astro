@@ -24,18 +24,23 @@ const currentPath = Astro.url.pathname;
       <span style="display:none; color: var(--color-white); font-family: var(--font-primary); font-weight: 700; font-size: 1.1rem; letter-spacing: 0.04em;">OBVIUS DIGITAL</span>
     </a>
 
-    <!-- Mobile toggle -->
-    <button
-      class="nav-toggle"
-      aria-label="Open navigation menu"
-      aria-expanded="false"
-      aria-controls="site-nav"
-      id="nav-toggle"
-    >
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+    <!-- Actions -->
+    <div class="header-actions">
+      <a href="/contact" class="btn btn--primary btn--sm header-cta">Request Proposal</a>
+      
+      <!-- Mobile toggle -->
+      <button
+        class="nav-toggle"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        id="nav-toggle"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
 
     <!-- Navigation -->
     <nav class="site-nav" id="site-nav" aria-label="Primary navigation">

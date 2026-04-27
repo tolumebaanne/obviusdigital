@@ -327,12 +327,12 @@
 .client-logos__label {
   /* text */
   font-family: var(--font-secondary);
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   /* color */
-  color: var(--color-grey-mid);
+  color: var(--color-grey-dark);
   /* box model */
   margin-bottom: var(--space-sm);
   /* text */
