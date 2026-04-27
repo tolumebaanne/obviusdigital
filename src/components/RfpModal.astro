@@ -180,17 +180,7 @@
       });
     });
 
-    /* ── Auto-advance for radio-only steps (1 & 3) ── */
-    [1, 3].forEach(stepNum => {
-      const radios = document.querySelectorAll(`.rfp-step[data-step="${stepNum}"] input[type="radio"]`);
-      radios.forEach(radio => {
-        radio.addEventListener('change', () => {
-          if (validateStep(stepNum)) {
-            setTimeout(() => { currentStep++; updateUI(); }, 280);
-          }
-        });
-      });
-    });
+    /* ── No auto-advance: user selects, sees highlight, then clicks Next ── */
 
     /* ── Update UI after step change ── */
     const updateUI = () => {
