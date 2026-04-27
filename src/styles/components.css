@@ -1522,7 +1522,7 @@
   transition: opacity var(--transition-base), visibility var(--transition-base);
 }
 
-.rfp-modal-overlay.rfp-hidden {
+.rfp-modal-overlay.rfp-modal-closed {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -1680,6 +1680,38 @@
   outline: none;
   border-color: var(--color-red);
   box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.2);
+}
+
+.rfp-input-error {
+  border-color: var(--color-red) !important;
+  box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.25) !important;
+}
+
+.rfp-field-error {
+  display: block;
+  color: var(--color-red);
+  font-family: var(--font-secondary);
+  font-size: 0.8125rem;
+  margin-top: -0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.rfp-phone-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.rfp-country-select {
+  width: auto;
+  flex: 0 0 auto;
+  min-width: 130px;
+  margin-bottom: 0;
+}
+
+.rfp-phone-number {
+  flex: 1;
+  margin-bottom: 0;
 }
 
 .rfp-field-group {

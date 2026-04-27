@@ -2,7 +2,7 @@
 // RfpModal.astro — 6-step wizard with review
 ---
 
-<div id="rfp-modal" class="rfp-modal-overlay rfp-hidden" aria-hidden="true" role="dialog">
+<div id="rfp-modal" class="rfp-modal-overlay rfp-modal-closed" aria-hidden="true" role="dialog">
   <div class="rfp-modal-container">
     <button id="rfp-close" class="rfp-close-btn" aria-label="Close modal">&times;</button>
 
@@ -78,17 +78,34 @@
             <input type="text" id="rfp-business" name="business_name" class="rfp-input" required>
           </div>
           <div class="rfp-field-group">
-            <label for="rfp-url">Current Website URL</label>
-            <input type="text" id="rfp-url" name="website_url" class="rfp-input" placeholder="www.yourbusiness.ca">
+            <label for="rfp-url">Current Website URL*</label>
+            <input type="text" id="rfp-url" name="website_url" class="rfp-input" placeholder="www.yourbusiness.ca" required>
+            <span class="rfp-field-error" id="rfp-url-error"></span>
           </div>
           <div class="rfp-field-group">
             <label for="rfp-email">Email Address*</label>
             <p class="rfp-helper-small">We'll send your project summary here. No spam, ever.</p>
             <input type="email" id="rfp-email" name="email" class="rfp-input" required>
+            <span class="rfp-field-error" id="rfp-email-error"></span>
           </div>
           <div class="rfp-field-group">
-            <label for="rfp-phone">Phone Number*</label>
-            <input type="tel" id="rfp-phone" name="phone_number" class="rfp-input" placeholder="416-555-0123" required>
+            <label>Phone Number*</label>
+            <div class="rfp-phone-row">
+              <select id="rfp-country-code" name="country_code" class="rfp-select rfp-country-select" required>
+                <option value="+1" selected>🇨🇦 +1 (CA)</option>
+                <option value="+1">🇺🇸 +1 (US)</option>
+                <option value="+44">🇬🇧 +44 (UK)</option>
+                <option value="+61">🇦🇺 +61 (AU)</option>
+                <option value="+91">🇮🇳 +91 (IN)</option>
+                <option value="+234">🇳🇬 +234 (NG)</option>
+                <option value="+27">🇿🇦 +27 (ZA)</option>
+                <option value="+33">🇫🇷 +33 (FR)</option>
+                <option value="+49">🇩🇪 +49 (DE)</option>
+                <option value="+971">🇦🇪 +971 (AE)</option>
+              </select>
+              <input type="tel" id="rfp-phone" name="phone_number" class="rfp-input rfp-phone-number" placeholder="416-555-0123" required pattern="[0-9\s\-\(\)]{7,15}">
+            </div>
+            <span class="rfp-field-error" id="rfp-phone-error"></span>
           </div>
         </fieldset>
       </div>
@@ -147,7 +164,7 @@
     document.querySelectorAll('.rfp-trigger, [data-rfp-trigger]').forEach(btn => {
       btn.addEventListener('click', e => {
         e.preventDefault();
-        modal.classList.remove('rfp-hidden');
+        modal.classList.remove('rfp-modal-closed');
         modal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
       });
@@ -155,7 +172,7 @@
 
     /* ── Close / Reset modal ── */
     const closeModal = () => {
-      modal.classList.add('rfp-hidden');
+      modal.classList.add('rfp-modal-closed');
       modal.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
       // Reset view state
@@ -230,7 +247,7 @@
         { label: 'Business name',                  value: fd.get('business_name') },
         { label: 'Current website',                value: fd.get('website_url') || '—' },
         { label: 'Best email to reach you',        value: fd.get('email') },
-        { label: 'Best number to reach you',       value: fd.get('phone_number') },
+        { label: 'Best number to reach you',       value: (fd.get('country_code') || '+1') + ' ' + (fd.get('phone_number') || '') },
       ];
       reviewEl.innerHTML = rows.map(r => `
         <div class="rfp-review-row">
@@ -239,18 +256,63 @@
         </div>`).join('');
     };
 
+    /* ── Format validators ── */
+    const isValidEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+    const isValidUrl   = v => /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+(\/.*)?$/.test(v.trim());
+    const isValidPhone = v => /^[0-9\s\-\(\)]{7,15}$/.test(v.trim());
+
+    const clearFieldErrors = stepEl => {
+      stepEl.querySelectorAll('.rfp-field-error').forEach(el => { el.textContent = ''; });
+      stepEl.querySelectorAll('.rfp-input-error').forEach(el => el.classList.remove('rfp-input-error'));
+    };
+
     /* ── Validate current step ── */
     const validateStep = stepNum => {
       const stepEl = document.querySelector(`.rfp-step[data-step="${stepNum}"]`);
+      clearFieldErrors(stepEl);
+      let valid = true;
+
       // Checkboxes: at least one checked
       const cbs = stepEl.querySelectorAll('input[type="checkbox"]');
       if (cbs.length > 0 && !Array.from(cbs).some(c => c.checked)) return false;
-      // Required fields
+
+      // Required fields (blank check)
       const required = stepEl.querySelectorAll('input[required], select[required]');
       for (const inp of required) {
-        if (!inp.checkValidity()) return false;
+        if (!inp.value.trim()) {
+          inp.classList.add('rfp-input-error');
+          valid = false;
+        }
       }
-      return true;
+      if (!valid) return false;
+
+      // Step 5 — format validation
+      if (stepNum === 5) {
+        const emailEl = stepEl.querySelector('#rfp-email');
+        const urlEl   = stepEl.querySelector('#rfp-url');
+        const phoneEl = stepEl.querySelector('#rfp-phone');
+
+        if (emailEl && !isValidEmail(emailEl.value)) {
+          emailEl.classList.add('rfp-input-error');
+          const err = document.getElementById('rfp-email-error');
+          if (err) err.textContent = 'Please enter a valid email address.';
+          valid = false;
+        }
+        if (urlEl && !isValidUrl(urlEl.value)) {
+          urlEl.classList.add('rfp-input-error');
+          const err = document.getElementById('rfp-url-error');
+          if (err) err.textContent = 'Please enter a valid website URL (e.g. www.yourbiz.ca).';
+          valid = false;
+        }
+        if (phoneEl && !isValidPhone(phoneEl.value)) {
+          phoneEl.classList.add('rfp-input-error');
+          const err = document.getElementById('rfp-phone-error');
+          if (err) err.textContent = 'Please enter a valid phone number (digits only, 7–15 digits).';
+          valid = false;
+        }
+      }
+
+      return valid;
     };
 
     /* ── Next ── */
