@@ -1,34 +1,39 @@
 ---
 const services = [
   {
+    name: 'Web Design',
+    description: 'high-conversion, mobile-first websites tailored for the Ontario market',
+    href: '/web-dev',
+    icon: '💻',
+    linkText: 'View our Work',
+  },
+  {
     name: '360 Media Production',
     description: 'Video, graphics, and photography that communicate who you are.',
     href: '/production',
     icon: '🎬',
+    linkText: 'View Service',
+  },
+  {
+    name: 'SEO & Search Authority',
+    description: 'dominate local search results and outrank national competitors in your own backyard',
+    href: '/seo',
+    icon: '🔍',
+    linkText: 'Rank Higher',
   },
   {
     name: 'Digital Marketing',
-    description: 'Strategic online presence across the platforms your audience actually uses.',
+    description: 'performance-based digital marketing solutions in Toronto, focused on leads, calls, and qualified contracts',
     href: '/digital-marketing',
-    icon: '📣',
+    icon: '📈',
+    linkText: 'Start Growing',
   },
   {
-    name: 'Consulting',
-    description: 'One-on-one guidance to help you make smarter marketing decisions.',
-    href: '/consulting',
-    icon: '🤝',
-  },
-  {
-    name: 'Training',
-    description: 'Hands-on sessions for small teams managing their own content.',
-    href: '/training',
-    icon: '🎓',
-  },
-  {
-    name: 'Website Development',
-    description: 'Clean, purposeful websites built to represent your brand.',
-    href: '/web-dev',
-    icon: '💻',
+    name: 'Social Media Strategy',
+    description: 'create content that engages the heart, building a loyal community around your brand',
+    href: '/social-media',
+    icon: '📱',
+    linkText: 'Get Social',
   },
 ];
 ---
@@ -46,7 +51,7 @@ const services = [
           <span class="service-tile__icon" aria-hidden="true">{service.icon}</span>
           <h3 class="service-tile__name">{service.name}</h3>
           <p class="service-tile__desc">{service.description}</p>
-          <a href={service.href} class="btn btn--outline-red btn--sm">View Service</a>
+          <a href={service.href} class="btn btn--outline-red btn--sm">{service.linkText}</a>
         </div>
       ))}
     </div>
