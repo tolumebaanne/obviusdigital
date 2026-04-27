@@ -1682,9 +1682,10 @@
   box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.2);
 }
 
-.rfp-input-error {
-  border-color: var(--color-red) !important;
-  box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.25) !important;
+.rfp-field-group .rfp-input.rfp-input-error,
+.rfp-field-group .rfp-phone-number.rfp-input-error {
+  border-color: var(--color-red);
+  box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.25);
 }
 
 .rfp-field-error {
@@ -1692,7 +1693,7 @@
   color: var(--color-red);
   font-family: var(--font-secondary);
   font-size: 0.8125rem;
-  margin-top: -0.75rem;
+  margin-top: 0.25rem;
   margin-bottom: 0.5rem;
 }
 
@@ -1700,7 +1701,7 @@
   display: flex;
   gap: 0.5rem;
   align-items: flex-start;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.6rem;
 }
 
 .rfp-country-select {
