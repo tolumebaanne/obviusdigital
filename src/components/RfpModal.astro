@@ -1,337 +1,337 @@
 ---
-// RfpModal.astro
+// RfpModal.astro — 6-step wizard with review
 ---
 
 <div id="rfp-modal" class="rfp-modal-overlay rfp-hidden" aria-hidden="true" role="dialog">
-    <div class="rfp-modal-container">
-        <button id="rfp-close" class="rfp-close-btn" aria-label="Close modal">&times;</button>
-        
-        <div class="rfp-modal-header">
-            <h2>Request a Proposal</h2>
-            <div class="rfp-progress-container">
-                <span id="rfp-step-indicator">Step 1 of 5</span>
-                <div class="rfp-progress-bar">
-                    <div id="rfp-progress-fill" class="rfp-progress-fill"></div>
-                </div>
-            </div>
+  <div class="rfp-modal-container">
+    <button id="rfp-close" class="rfp-close-btn" aria-label="Close modal">&times;</button>
+
+    <div class="rfp-modal-header" id="rfp-modal-header">
+      <h2 id="rfp-modal-title">Request a Proposal</h2>
+      <div class="rfp-progress-container">
+        <span id="rfp-step-indicator">Step 1 of 5</span>
+        <div class="rfp-progress-bar">
+          <div id="rfp-progress-fill" class="rfp-progress-fill"></div>
         </div>
-
-        <form id="rfp-form" class="rfp-form">
-            <!-- STEP 1: Primary Goal -->
-            <div class="rfp-step active" data-step="1">
-                <fieldset>
-                    <legend>What is the primary goal for your digital presence?</legend>
-                    <p class="rfp-helper">Choose the one that's most urgent. We'll cover the rest during our call.</p>
-                    
-                    <label class="rfp-radio">
-                        <input type="radio" name="primary_goal" value="Get more local leads/phone calls" required>
-                        <span>Get more local leads/phone calls</span>
-                    </label>
-                    <label class="rfp-radio">
-                        <input type="radio" name="primary_goal" value="Refresh an outdated or 'clunky' website">
-                        <span>Refresh an outdated or 'clunky' website</span>
-                    </label>
-                    <label class="rfp-radio">
-                        <input type="radio" name="primary_goal" value="Rank higher on Google in my service area">
-                        <span>Rank higher on Google in my service area</span>
-                    </label>
-                    <label class="rfp-radio">
-                        <input type="radio" name="primary_goal" value="Launch a brand-new business">
-                        <span>Launch a brand-new business</span>
-                    </label>
-                </fieldset>
-            </div>
-
-            <!-- STEP 2: Services -->
-            <div class="rfp-step rfp-hidden" data-step="2">
-                <fieldset>
-                    <legend>Which services are you interested in exploring?</legend>
-                    <p class="rfp-helper">Not sure yet? Select 'Web Design' and we can audit the rest.</p>
-                    
-                    <label class="rfp-checkbox">
-                        <input type="checkbox" name="services[]" value="Web Design">
-                        <span>Web Design</span>
-                    </label>
-                    <label class="rfp-checkbox">
-                        <input type="checkbox" name="services[]" value="SEO">
-                        <span>SEO</span>
-                    </label>
-                    <label class="rfp-checkbox">
-                        <input type="checkbox" name="services[]" value="Social Media">
-                        <span>Social Media</span>
-                    </label>
-                    <label class="rfp-checkbox">
-                        <input type="checkbox" name="services[]" value="Content/Copywriting">
-                        <span>Content/Copywriting</span>
-                    </label>
-                    <label class="rfp-checkbox">
-                        <input type="checkbox" name="services[]" value="Ongoing Maintenance">
-                        <span>Ongoing Maintenance</span>
-                    </label>
-                </fieldset>
-            </div>
-
-            <!-- STEP 3: Investment -->
-            <div class="rfp-step rfp-hidden" data-step="3">
-                <fieldset>
-                    <legend>What is your estimated investment for this project?</legend>
-                    <p class="rfp-helper">
-                        <span class="info-icon" title="Note: Most our GTA clients see a full return on their digital investment within the first 6-12 months through increased lead volume.">?</span>
-                        This helps us suggest the most effective strategy for your budget.
-                    </p>
-                    
-                    <select name="estimated_investment" class="rfp-select" required>
-                        <option value="" disabled selected>Select an option...</option>
-                        <option value="$3k - $7k">$3k - $7k: Perfect for local businesses needing a professional presence.</option>
-                        <option value="$7k - $15k">$7k - $15k: Ideal for businesses ready to dominate local search and capture more leads.</option>
-                        <option value="$15k+">$15k+: Custom solutions for businesses expanding across Ontario.</option>
-                        <option value="Not sure">I'm not sure. I'd like a recommendation based on my goals.</option>
-                    </select>
-                </fieldset>
-            </div>
-
-            <!-- STEP 4: Timeline -->
-            <div class="rfp-step rfp-hidden" data-step="4">
-                <fieldset>
-                    <legend>How soon are you looking to launch?</legend>
-                    <p class="rfp-helper">e.g., "Ready to start Monday" or "Aiming for a summer rebrand"</p>
-                    
-                    <input type="text" name="launch_timeline" class="rfp-input" placeholder="Your estimated timeline" required>
-                </fieldset>
-            </div>
-
-            <!-- STEP 5: Contact Details -->
-            <div class="rfp-step rfp-hidden" data-step="5">
-                <fieldset>
-                    <legend>Almost done. Where should we send your proposal?</legend>
-                    
-                    <div class="rfp-field-group">
-                        <label for="rfp-name">Full Name*</label>
-                        <input type="text" id="rfp-name" name="name" class="rfp-input" placeholder="e.g., John Smith" required>
-                    </div>
-
-                    <div class="rfp-field-group">
-                        <label for="rfp-business">Business Name*</label>
-                        <p class="rfp-helper-small">So we can do some homework on your brand before we chat.</p>
-                        <input type="text" id="rfp-business" name="business_name" class="rfp-input" required>
-                    </div>
-
-                    <div class="rfp-field-group">
-                        <label for="rfp-url">Current Website URL</label>
-                        <input type="text" id="rfp-url" name="website_url" class="rfp-input" placeholder="www.yourbusiness.ca">
-                    </div>
-
-                    <div class="rfp-field-group">
-                        <label for="rfp-email">Email Address*</label>
-                        <p class="rfp-helper-small">We'll send your project summary here. No spam, ever.</p>
-                        <input type="email" id="rfp-email" name="email" class="rfp-input" required>
-                    </div>
-
-                    <div class="rfp-field-group">
-                        <label for="rfp-phone">Phone Number*</label>
-                        <input type="tel" id="rfp-phone" name="phone_number" class="rfp-input" placeholder="416-555-0123" required>
-                    </div>
-                </fieldset>
-            </div>
-
-            <div id="rfp-error" class="rfp-error rfp-hidden">Oops! We need this information to continue.</div>
-
-            <div class="rfp-modal-footer">
-                <button type="button" id="rfp-prev" class="rfp-btn-secondary rfp-hidden">Back</button>
-                <button type="button" id="rfp-next" class="rfp-btn-primary">Next</button>
-                <button type="submit" id="rfp-submit" class="rfp-btn-primary rfp-hidden">Send My RFP</button>
-            </div>
-        </form>
-
-        <div id="rfp-success" class="rfp-success rfp-hidden">
-            <h3>Thanks! We'll reach out to you soon.</h3>
-            <button type="button" id="rfp-close-success" class="rfp-btn-secondary mt-1">Close</button>
-        </div>
+      </div>
     </div>
+
+    <form id="rfp-form">
+
+      <!-- STEP 1: Primary Goal (radio — auto-advance) -->
+      <div class="rfp-step active" data-step="1">
+        <fieldset>
+          <legend>What is the primary goal for your digital presence?</legend>
+          <p class="rfp-helper">Choose the one that's most urgent. We'll cover the rest during our call.</p>
+          <label class="rfp-radio"><input type="radio" name="primary_goal" value="Get more local leads/phone calls" required><span>Get more local leads/phone calls</span></label>
+          <label class="rfp-radio"><input type="radio" name="primary_goal" value="Refresh an outdated or clunky website"><span>Refresh an outdated or clunky website</span></label>
+          <label class="rfp-radio"><input type="radio" name="primary_goal" value="Rank higher on Google in my service area"><span>Rank higher on Google in my service area</span></label>
+          <label class="rfp-radio"><input type="radio" name="primary_goal" value="Launch a brand-new business"><span>Launch a brand-new business</span></label>
+        </fieldset>
+      </div>
+
+      <!-- STEP 2: Services (checkboxes — highlight + manual Next) -->
+      <div class="rfp-step rfp-hidden" data-step="2">
+        <fieldset>
+          <legend>Which services are you interested in exploring?</legend>
+          <p class="rfp-helper">Select all that apply, then click Next.</p>
+          <label class="rfp-checkbox"><input type="checkbox" name="services[]" value="Web Design"><span>Web Design</span></label>
+          <label class="rfp-checkbox"><input type="checkbox" name="services[]" value="SEO"><span>SEO</span></label>
+          <label class="rfp-checkbox"><input type="checkbox" name="services[]" value="Social Media"><span>Social Media</span></label>
+          <label class="rfp-checkbox"><input type="checkbox" name="services[]" value="Content / Copywriting"><span>Content / Copywriting</span></label>
+          <label class="rfp-checkbox"><input type="checkbox" name="services[]" value="Ongoing Maintenance"><span>Ongoing Maintenance</span></label>
+        </fieldset>
+      </div>
+
+      <!-- STEP 3: Investment (radio — auto-advance) -->
+      <div class="rfp-step rfp-hidden" data-step="3">
+        <fieldset>
+          <legend>What is your estimated investment for this project?</legend>
+          <p class="rfp-helper"><span class="info-icon" title="Most GTA clients see a full return within 6–12 months through increased lead volume.">?</span> This helps us suggest the most effective strategy for your budget.</p>
+          <label class="rfp-radio"><input type="radio" name="estimated_investment" value="$3k - $7k" required><span>$3k – $7k <small>Perfect for local businesses needing a professional presence.</small></span></label>
+          <label class="rfp-radio"><input type="radio" name="estimated_investment" value="$7k - $15k"><span>$7k – $15k <small>Ideal for businesses ready to dominate local search.</small></span></label>
+          <label class="rfp-radio"><input type="radio" name="estimated_investment" value="$15k+"><span>$15k+ <small>Custom solutions for businesses expanding across Ontario.</small></span></label>
+          <label class="rfp-radio"><input type="radio" name="estimated_investment" value="Not sure"><span>Not sure <small>I'd like a recommendation based on my goals.</small></span></label>
+        </fieldset>
+      </div>
+
+      <!-- STEP 4: Timeline (text input) -->
+      <div class="rfp-step rfp-hidden" data-step="4">
+        <fieldset>
+          <legend>How soon are you looking to launch?</legend>
+          <p class="rfp-helper">e.g., "Ready to start Monday" or "Aiming for a summer rebrand"</p>
+          <input type="text" name="launch_timeline" class="rfp-input" placeholder="Your estimated timeline" required>
+        </fieldset>
+      </div>
+
+      <!-- STEP 5: Contact Details -->
+      <div class="rfp-step rfp-hidden" data-step="5">
+        <fieldset>
+          <legend>Almost done. Where should we send your proposal?</legend>
+          <div class="rfp-field-group">
+            <label for="rfp-name">Full Name*</label>
+            <input type="text" id="rfp-name" name="name" class="rfp-input" placeholder="e.g., John Smith" required>
+          </div>
+          <div class="rfp-field-group">
+            <label for="rfp-business">Business Name*</label>
+            <p class="rfp-helper-small">So we can do some homework on your brand before we chat.</p>
+            <input type="text" id="rfp-business" name="business_name" class="rfp-input" required>
+          </div>
+          <div class="rfp-field-group">
+            <label for="rfp-url">Current Website URL</label>
+            <input type="text" id="rfp-url" name="website_url" class="rfp-input" placeholder="www.yourbusiness.ca">
+          </div>
+          <div class="rfp-field-group">
+            <label for="rfp-email">Email Address*</label>
+            <p class="rfp-helper-small">We'll send your project summary here. No spam, ever.</p>
+            <input type="email" id="rfp-email" name="email" class="rfp-input" required>
+          </div>
+          <div class="rfp-field-group">
+            <label for="rfp-phone">Phone Number*</label>
+            <input type="tel" id="rfp-phone" name="phone_number" class="rfp-input" placeholder="416-555-0123" required>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- STEP 6: Review -->
+      <div class="rfp-step rfp-hidden" data-step="6">
+        <div class="rfp-review-header">
+          <p class="rfp-helper">Here's what you've told us. Everything look right?</p>
+        </div>
+        <div id="rfp-review-content" class="rfp-review-content"></div>
+        <p class="rfp-review-edit-hint">Need to change something? Hit <strong>Back</strong> to go back to the beginning.</p>
+      </div>
+
+      <div id="rfp-error" class="rfp-error rfp-hidden">Oops! We need this information to continue.</div>
+
+      <div class="rfp-modal-footer">
+        <button type="button" id="rfp-prev" class="rfp-btn-secondary rfp-hidden">Back</button>
+        <button type="button" id="rfp-next" class="rfp-btn-primary">Next</button>
+        <button type="submit" id="rfp-submit" class="rfp-btn-primary rfp-hidden">Send My RFP</button>
+      </div>
+    </form>
+
+    <!-- Success State -->
+    <div id="rfp-success" class="rfp-success rfp-hidden">
+      <div class="rfp-success-icon">&#10003;</div>
+      <h3>Thank You!</h3>
+      <p>Your proposal request has been received.<br>We'll be in touch within one business day.</p>
+      <button type="button" id="rfp-close-success" class="rfp-btn-primary mt-1">Close</button>
+    </div>
+  </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const modal = document.getElementById('rfp-modal');
-        const closeBtn = document.getElementById('rfp-close');
-        const closeSuccessBtn = document.getElementById('rfp-close-success');
-        const nextBtn = document.getElementById('rfp-next');
-        const prevBtn = document.getElementById('rfp-prev');
-        const submitBtn = document.getElementById('rfp-submit');
-        const form = document.getElementById('rfp-form');
-        const successMsg = document.getElementById('rfp-success');
-        const errorMsg = document.getElementById('rfp-error');
-        const stepIndicator = document.getElementById('rfp-step-indicator');
-        const progressFill = document.getElementById('rfp-progress-fill');
-        
-        const steps = document.querySelectorAll('.rfp-step');
-        let currentStep = 1;
-        const totalSteps = steps.length;
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal     = document.getElementById('rfp-modal');
+    const header    = document.getElementById('rfp-modal-header');
+    const title     = document.getElementById('rfp-modal-title');
+    const closeBtn  = document.getElementById('rfp-close');
+    const closeSuc  = document.getElementById('rfp-close-success');
+    const nextBtn   = document.getElementById('rfp-next');
+    const prevBtn   = document.getElementById('rfp-prev');
+    const submitBtn = document.getElementById('rfp-submit');
+    const form      = document.getElementById('rfp-form');
+    const successEl = document.getElementById('rfp-success');
+    const errorEl   = document.getElementById('rfp-error');
+    const indicator = document.getElementById('rfp-step-indicator');
+    const fill      = document.getElementById('rfp-progress-fill');
+    const reviewEl  = document.getElementById('rfp-review-content');
 
-        // Open modal from any button with data-rfp-trigger attribute or .rfp-trigger class
-        const triggers = document.querySelectorAll('.rfp-trigger, [data-rfp-trigger]');
-        triggers.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                modal.classList.remove('rfp-hidden');
-                modal.setAttribute('aria-hidden', 'false');
-                document.body.style.overflow = 'hidden'; // Prevent scrolling
-            });
-        });
+    const steps = document.querySelectorAll('.rfp-step');
+    const QUESTION_STEPS = 5; // steps 1-5 are questions; step 6 is review
+    const TOTAL_STEPS = steps.length; // 6
+    let currentStep = 1;
 
-        const closeModal = () => {
-            modal.classList.add('rfp-hidden');
-            modal.setAttribute('aria-hidden', 'true');
-            document.body.style.overflow = '';
-        };
-
-        closeBtn.addEventListener('click', closeModal);
-        closeSuccessBtn.addEventListener('click', closeModal);
-        
-        // Close on clicking outside container
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
-        });
-
-        const updateUI = () => {
-            steps.forEach((stepEl, idx) => {
-                if (idx + 1 === currentStep) {
-                    stepEl.classList.remove('rfp-hidden');
-                    stepEl.classList.add('active');
-                } else {
-                    stepEl.classList.add('rfp-hidden');
-                    stepEl.classList.remove('active');
-                }
-            });
-
-            stepIndicator.textContent = `Step ${currentStep} of ${totalSteps}`;
-            progressFill.style.width = `${(currentStep / totalSteps) * 100}%`;
-
-            if (currentStep === 1) {
-                prevBtn.classList.add('rfp-hidden');
-            } else {
-                prevBtn.classList.remove('rfp-hidden');
-            }
-
-            if (currentStep === totalSteps) {
-                nextBtn.classList.add('rfp-hidden');
-                submitBtn.classList.remove('rfp-hidden');
-            } else {
-                nextBtn.classList.remove('rfp-hidden');
-                submitBtn.classList.add('rfp-hidden');
-            }
-
-            errorMsg.classList.add('rfp-hidden');
-        };
-
-        const validateStep = (stepNum) => {
-            const stepEl = document.querySelector(`.rfp-step[data-step="${stepNum}"]`);
-            
-            // For checkboxes (Step 2), at least one must be checked
-            const checkboxes = stepEl.querySelectorAll('input[type="checkbox"]');
-            if (checkboxes.length > 0) {
-                const isChecked = Array.from(checkboxes).some(cb => cb.checked);
-                if (!isChecked) return false;
-            }
-
-            // Standard HTML5 validation for inputs/selects/radios
-            const inputs = stepEl.querySelectorAll('input[required], select[required]');
-            for (let input of inputs) {
-                if (!input.checkValidity()) {
-                    input.reportValidity();
-                    return false;
-                }
-            }
-            return true;
-        };
-
-        // Auto-advance for Step 1 radio buttons
-        const step1Radios = document.querySelectorAll('.rfp-step[data-step="1"] input[type="radio"]');
-        step1Radios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                if (validateStep(currentStep)) {
-                    // Small delay for UX so they see it was selected
-                    setTimeout(() => {
-                        currentStep++;
-                        updateUI();
-                    }, 250);
-                }
-            });
-        });
-
-        nextBtn.addEventListener('click', () => {
-            if (validateStep(currentStep)) {
-                currentStep++;
-                updateUI();
-            } else {
-                errorMsg.classList.remove('rfp-hidden');
-            }
-        });
-
-        prevBtn.addEventListener('click', () => {
-            currentStep--;
-            updateUI();
-        });
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!validateStep(currentStep)) {
-                errorMsg.classList.remove('rfp-hidden');
-                return;
-            }
-
-            const formData = new FormData(form);
-            const dataObj = {};
-            
-            // Handle arrays (checkboxes)
-            formData.forEach((value, key) => {
-                if (key.endsWith('[]')) {
-                    const cleanKey = key.slice(0, -2);
-                    if (!dataObj[cleanKey]) dataObj[cleanKey] = [];
-                    dataObj[cleanKey].push(value);
-                } else {
-                    dataObj[key] = value;
-                }
-            });
-
-            submitBtn.textContent = 'Sending...';
-            submitBtn.disabled = true;
-
-            try {
-                const response = await fetch('/contact.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dataObj)
-                });
-
-                if (response.ok) {
-                    form.classList.add('rfp-hidden');
-                    successMsg.classList.remove('rfp-hidden');
-                    // Reset form for future opens
-                    form.reset();
-                    currentStep = 1;
-                    updateUI();
-                    form.classList.remove('rfp-hidden');
-                    successMsg.classList.add('rfp-hidden');
-                    closeModal();
-                    // Optionally show a quick success toast or keep modal open with success message
-                    modal.classList.remove('rfp-hidden');
-                    form.classList.add('rfp-hidden');
-                    successMsg.classList.remove('rfp-hidden');
-                } else {
-                    throw new Error('Server error');
-                }
-            } catch (error) {
-                console.error(error);
-                errorMsg.textContent = 'Something went wrong. Please try again.';
-                errorMsg.classList.remove('rfp-hidden');
-            } finally {
-                submitBtn.textContent = 'Send My RFP';
-                submitBtn.disabled = false;
-            }
-        });
-
-        // Initialize UI
-        updateUI();
+    /* ── Open modal ── */
+    document.querySelectorAll('.rfp-trigger, [data-rfp-trigger]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        modal.classList.remove('rfp-hidden');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      });
     });
+
+    /* ── Close modal ── */
+    const closeModal = () => {
+      modal.classList.add('rfp-hidden');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+    closeBtn.addEventListener('click', closeModal);
+    closeSuc.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+    /* ── Visual selection: radio labels ── */
+    document.querySelectorAll('.rfp-radio input[type="radio"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        // Clear siblings
+        const siblings = document.querySelectorAll(`.rfp-step[data-step="${currentStep}"] .rfp-radio`);
+        siblings.forEach(l => l.classList.remove('selected'));
+        radio.closest('.rfp-radio').classList.add('selected');
+      });
+    });
+
+    /* ── Visual selection: checkbox labels ── */
+    document.querySelectorAll('.rfp-checkbox input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        cb.closest('.rfp-checkbox').classList.toggle('checked', cb.checked);
+      });
+    });
+
+    /* ── Auto-advance for radio-only steps (1 & 3) ── */
+    [1, 3].forEach(stepNum => {
+      const radios = document.querySelectorAll(`.rfp-step[data-step="${stepNum}"] input[type="radio"]`);
+      radios.forEach(radio => {
+        radio.addEventListener('change', () => {
+          if (validateStep(stepNum)) {
+            setTimeout(() => { currentStep++; updateUI(); }, 280);
+          }
+        });
+      });
+    });
+
+    /* ── Update UI after step change ── */
+    const updateUI = () => {
+      steps.forEach((el, idx) => {
+        const isActive = idx + 1 === currentStep;
+        el.classList.toggle('rfp-hidden', !isActive);
+        el.classList.toggle('active', isActive);
+      });
+
+      if (currentStep <= QUESTION_STEPS) {
+        indicator.textContent = `Step ${currentStep} of ${QUESTION_STEPS}`;
+        fill.style.width = `${(currentStep / QUESTION_STEPS) * 100}%`;
+        title.textContent = 'Request a Proposal';
+      } else {
+        indicator.textContent = 'Review';
+        fill.style.width = '100%';
+        title.textContent = 'Review Your Answers';
+        buildReview();
+      }
+
+      prevBtn.classList.toggle('rfp-hidden', currentStep === 1);
+      const isReview = currentStep === TOTAL_STEPS;
+      nextBtn.classList.toggle('rfp-hidden', isReview);
+      submitBtn.classList.toggle('rfp-hidden', !isReview);
+      errorEl.classList.add('rfp-hidden');
+    };
+
+    /* ── Build review content ── */
+    const buildReview = () => {
+      const fd = new FormData(form);
+      const services = fd.getAll('services[]');
+      const rows = [
+        { label: 'Primary Goal',   value: fd.get('primary_goal') },
+        { label: 'Services',       value: services.length ? services.join(', ') : '—' },
+        { label: 'Investment',     value: fd.get('estimated_investment') },
+        { label: 'Timeline',       value: fd.get('launch_timeline') },
+        { label: 'Full Name',      value: fd.get('name') },
+        { label: 'Business',       value: fd.get('business_name') },
+        { label: 'Website',        value: fd.get('website_url') || '—' },
+        { label: 'Email',          value: fd.get('email') },
+        { label: 'Phone',          value: fd.get('phone_number') },
+      ];
+      reviewEl.innerHTML = rows.map(r => `
+        <div class="rfp-review-row">
+          <span class="rfp-review-label">${r.label}</span>
+          <span class="rfp-review-value">${r.value || '—'}</span>
+        </div>`).join('');
+    };
+
+    /* ── Validate current step ── */
+    const validateStep = stepNum => {
+      const stepEl = document.querySelector(`.rfp-step[data-step="${stepNum}"]`);
+      // Checkboxes: at least one checked
+      const cbs = stepEl.querySelectorAll('input[type="checkbox"]');
+      if (cbs.length > 0 && !Array.from(cbs).some(c => c.checked)) return false;
+      // Required fields
+      const required = stepEl.querySelectorAll('input[required], select[required]');
+      for (const inp of required) {
+        if (!inp.checkValidity()) return false;
+      }
+      return true;
+    };
+
+    /* ── Next ── */
+    nextBtn.addEventListener('click', () => {
+      if (validateStep(currentStep)) {
+        currentStep++;
+        updateUI();
+      } else {
+        errorEl.classList.remove('rfp-hidden');
+      }
+    });
+
+    /* ── Back (from review: go to step 1) ── */
+    prevBtn.addEventListener('click', () => {
+      if (currentStep === TOTAL_STEPS) {
+        currentStep = 1; // back from review restarts
+      } else {
+        currentStep--;
+      }
+      updateUI();
+    });
+
+    /* ── Submit ── */
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+
+      const fd = new FormData(form);
+      const data = {};
+      fd.forEach((val, key) => {
+        const k = key.endsWith('[]') ? key.slice(0, -2) : key;
+        if (key.endsWith('[]')) {
+          data[k] = data[k] ? [...data[k], val] : [val];
+        } else {
+          data[k] = val;
+        }
+      });
+
+      submitBtn.textContent = 'Sending…';
+      submitBtn.disabled = true;
+
+      try {
+        const res = await fetch('/contact.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error('Server error');
+
+        // Show success
+        form.classList.add('rfp-hidden');
+        header.classList.add('rfp-hidden');
+        successEl.classList.remove('rfp-hidden');
+
+        // Reset for next open
+        form.reset();
+        document.querySelectorAll('.rfp-radio').forEach(l => l.classList.remove('selected'));
+        document.querySelectorAll('.rfp-checkbox').forEach(l => l.classList.remove('checked'));
+        currentStep = 1;
+
+      } catch (err) {
+        console.error(err);
+        errorEl.textContent = 'Something went wrong. Please try again.';
+        errorEl.classList.remove('rfp-hidden');
+      } finally {
+        submitBtn.textContent = 'Send My RFP';
+        submitBtn.disabled = false;
+      }
+    });
+
+    // Reset modal state on close
+    const resetModal = () => {
+      successEl.classList.add('rfp-hidden');
+      header.classList.remove('rfp-hidden');
+      form.classList.remove('rfp-hidden');
+      updateUI();
+    };
+    closeBtn.addEventListener('click', resetModal);
+    closeSuc.addEventListener('click', resetModal);
+    modal.addEventListener('click', e => { if (e.target === modal) resetModal(); });
+
+    updateUI();
+  });
 </script>
