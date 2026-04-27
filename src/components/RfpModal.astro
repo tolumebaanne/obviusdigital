@@ -208,6 +208,18 @@
 
     /* ── No auto-advance: user selects, sees highlight, then clicks Next ── */
 
+    /* ── Phone field: strip non-numeric characters in real time ── */
+    const phoneInput = document.getElementById('rfp-phone');
+    if (phoneInput) {
+      phoneInput.setAttribute('inputmode', 'numeric');
+      phoneInput.addEventListener('input', () => {
+        // Allow digits, spaces, dashes, parentheses only
+        const cleaned = phoneInput.value.replace(/[^0-9\s\-()]/g, '');
+        if (phoneInput.value !== cleaned) phoneInput.value = cleaned;
+      });
+    }
+
+
     /* ── Update UI after step change ── */
     const updateUI = () => {
       steps.forEach((el, idx) => {
