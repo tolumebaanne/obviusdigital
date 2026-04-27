@@ -153,11 +153,20 @@
       });
     });
 
-    /* ── Close modal ── */
+    /* ── Close / Reset modal ── */
     const closeModal = () => {
       modal.classList.add('rfp-hidden');
       modal.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
+      // Reset view state
+      successEl.classList.add('rfp-hidden');
+      header.classList.remove('rfp-hidden');
+      form.classList.remove('rfp-hidden');
+      form.reset();
+      document.querySelectorAll('.rfp-radio').forEach(l => l.classList.remove('selected'));
+      document.querySelectorAll('.rfp-checkbox').forEach(l => l.classList.remove('checked'));
+      currentStep = 1;
+      updateUI();
     };
     closeBtn.addEventListener('click', closeModal);
     closeSuc.addEventListener('click', closeModal);
@@ -208,20 +217,20 @@
       errorEl.classList.add('rfp-hidden');
     };
 
-    /* ── Build review content ── */
+    /* ── Build review content — conversational labels ── */
     const buildReview = () => {
       const fd = new FormData(form);
       const services = fd.getAll('services[]');
       const rows = [
-        { label: 'Primary Goal',   value: fd.get('primary_goal') },
-        { label: 'Services',       value: services.length ? services.join(', ') : '—' },
-        { label: 'Investment',     value: fd.get('estimated_investment') },
-        { label: 'Timeline',       value: fd.get('launch_timeline') },
-        { label: 'Full Name',      value: fd.get('name') },
-        { label: 'Business',       value: fd.get('business_name') },
-        { label: 'Website',        value: fd.get('website_url') || '—' },
-        { label: 'Email',          value: fd.get('email') },
-        { label: 'Phone',          value: fd.get('phone_number') },
+        { label: 'Your primary goal is',          value: fd.get('primary_goal') },
+        { label: 'Service(s) you require',         value: services.length ? services.join(', ') : '—' },
+        { label: 'Your estimated budget',          value: fd.get('estimated_investment') },
+        { label: 'Your target launch timeline',    value: fd.get('launch_timeline') },
+        { label: 'Name',                           value: fd.get('name') },
+        { label: 'Business name',                  value: fd.get('business_name') },
+        { label: 'Current website',                value: fd.get('website_url') || '—' },
+        { label: 'Best email to reach you',        value: fd.get('email') },
+        { label: 'Best number to reach you',       value: fd.get('phone_number') },
       ];
       reviewEl.innerHTML = rows.map(r => `
         <div class="rfp-review-row">
@@ -254,13 +263,9 @@
       }
     });
 
-    /* ── Back (from review: go to step 1) ── */
+    /* ── Back ── */
     prevBtn.addEventListener('click', () => {
-      if (currentStep === TOTAL_STEPS) {
-        currentStep = 1; // back from review restarts
-      } else {
-        currentStep--;
-      }
+      currentStep--;
       updateUI();
     });
 
@@ -296,7 +301,6 @@
         successEl.classList.remove('rfp-hidden');
 
         // Reset for next open
-        form.reset();
         document.querySelectorAll('.rfp-radio').forEach(l => l.classList.remove('selected'));
         document.querySelectorAll('.rfp-checkbox').forEach(l => l.classList.remove('checked'));
         currentStep = 1;
@@ -310,17 +314,6 @@
         submitBtn.disabled = false;
       }
     });
-
-    // Reset modal state on close
-    const resetModal = () => {
-      successEl.classList.add('rfp-hidden');
-      header.classList.remove('rfp-hidden');
-      form.classList.remove('rfp-hidden');
-      updateUI();
-    };
-    closeBtn.addEventListener('click', resetModal);
-    closeSuc.addEventListener('click', resetModal);
-    modal.addEventListener('click', e => { if (e.target === modal) resetModal(); });
 
     updateUI();
   });
