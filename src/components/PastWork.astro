@@ -1,16 +1,19 @@
 ---
 const works = [
   {
-    brandName: '[PLACEHOLDER] Brand Name',
-    category: '[PLACEHOLDER] Category',
+    brandName: 'GamePride',
+    category: '360 Media Production',
+    logo: '/images/work/gamepride-logo.png',
   },
   {
-    brandName: '[PLACEHOLDER] Brand Name',
-    category: '[PLACEHOLDER] Category',
+    brandName: 'Sandra McTavish',
+    category: 'Web Design',
+    logo: '/images/trusted_by/Sandra_McTavish_logoArtboard-1-300x199.png',
   },
   {
-    brandName: '[PLACEHOLDER] Brand Name',
-    category: '[PLACEHOLDER] Category',
+    brandName: 'Therapy House',
+    category: 'Social Media Strategy',
+    logo: '/images/work/therapy-house-logo.png',
   },
 ];
 ---
@@ -26,7 +29,7 @@ const works = [
       {works.map((work) => (
         <div class="work-card">
           <div class="work-card__logo-area">
-            <span class="work-card__logo-placeholder">[PLACEHOLDER] Client Logo</span>
+            <img src={work.logo} alt={`${work.brandName} logo`} class="work-card__logo" loading="lazy" />
           </div>
           <span class="work-card__tag">{work.category}</span>
           <h3 class="work-card__name">{work.brandName}</h3>
