@@ -1615,6 +1615,27 @@
   margin-bottom: var(--space-sm);
 }
 
+/* Intro card */
+.rfp-intro {
+  padding: var(--space-xs) 0;
+}
+
+.rfp-intro h3 {
+  font-family: var(--font-primary);
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: var(--color-black);
+  margin-bottom: var(--space-sm);
+}
+
+.rfp-intro p {
+  font-family: var(--font-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-grey-dark);
+  margin: 0;
+}
+
 .rfp-helper-small {
   font-family: var(--font-secondary);
   font-size: 0.8125rem;

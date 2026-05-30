@@ -8,7 +8,7 @@
 
     <div class="rfp-modal-header" id="rfp-modal-header">
       <h2 id="rfp-modal-title">Request a Proposal</h2>
-      <div class="rfp-progress-container">
+      <div class="rfp-progress-container" id="rfp-progress">
         <span id="rfp-step-indicator">Step 1 of 5</span>
         <div class="rfp-progress-bar">
           <div id="rfp-progress-fill" class="rfp-progress-fill"></div>
@@ -18,8 +18,16 @@
 
     <form id="rfp-form">
 
-      <!-- STEP 1: Primary Goal (radio — auto-advance) -->
+      <!-- STEP 1: Intro card -->
       <div class="rfp-step active" data-step="1">
+        <div class="rfp-intro">
+          <h3>Let's prepare your proposal</h3>
+          <p>We'll ask you a few quick questions about your goals, services, and timeline so we can put together a tailored proposal for you. It only takes a minute.</p>
+        </div>
+      </div>
+
+      <!-- STEP 2: Primary Goal (radio) -->
+      <div class="rfp-step rfp-hidden" data-step="2">
         <fieldset>
           <legend>What is the primary goal for your digital presence?</legend>
           <p class="rfp-helper">Choose the one that's most urgent. We'll cover the rest during our call.</p>
@@ -30,8 +38,8 @@
         </fieldset>
       </div>
 
-      <!-- STEP 2: Services (checkboxes — highlight + manual Next) -->
-      <div class="rfp-step rfp-hidden" data-step="2">
+      <!-- STEP 3: Services (checkboxes — highlight + manual Next) -->
+      <div class="rfp-step rfp-hidden" data-step="3">
         <fieldset>
           <legend>Which services are you interested in exploring?</legend>
           <p class="rfp-helper">Select all that apply, then click Next.</p>
@@ -43,8 +51,8 @@
         </fieldset>
       </div>
 
-      <!-- STEP 3: Investment (radio — auto-advance) -->
-      <div class="rfp-step rfp-hidden" data-step="3">
+      <!-- STEP 4: Investment (radio) -->
+      <div class="rfp-step rfp-hidden" data-step="4">
         <fieldset>
           <legend>What is your estimated investment for this project?</legend>
           <p class="rfp-helper"><span class="info-icon" title="Most GTA clients see a full return within 6–12 months through increased lead volume.">?</span> This helps us suggest the most effective strategy for your budget.</p>
@@ -55,8 +63,8 @@
         </fieldset>
       </div>
 
-      <!-- STEP 4: Timeline (text input) -->
-      <div class="rfp-step rfp-hidden" data-step="4">
+      <!-- STEP 5: Timeline (text input) -->
+      <div class="rfp-step rfp-hidden" data-step="5">
         <fieldset>
           <legend>How soon are you looking to launch?</legend>
           <p class="rfp-helper">e.g., "Ready to start Monday" or "Aiming for a summer rebrand"</p>
@@ -64,8 +72,8 @@
         </fieldset>
       </div>
 
-      <!-- STEP 5: Contact Details -->
-      <div class="rfp-step rfp-hidden" data-step="5">
+      <!-- STEP 6: Contact Details -->
+      <div class="rfp-step rfp-hidden" data-step="6">
         <fieldset>
           <legend>Almost done. Where should we send your proposal?</legend>
           <div class="rfp-field-group">
@@ -110,8 +118,8 @@
         </fieldset>
       </div>
 
-      <!-- STEP 6: Review -->
-      <div class="rfp-step rfp-hidden" data-step="6">
+      <!-- STEP 7: Review -->
+      <div class="rfp-step rfp-hidden" data-step="7">
         <div class="rfp-review-header">
           <p class="rfp-helper">Here's what you've told us. Everything look right?</p>
         </div>
@@ -156,8 +164,10 @@
     const reviewEl  = document.getElementById('rfp-review-content');
 
     const steps = document.querySelectorAll('.rfp-step');
-    const QUESTION_STEPS = 5; // steps 1-5 are questions; step 6 is review
-    const TOTAL_STEPS = steps.length; // 6
+    const progress  = document.getElementById('rfp-progress');
+    const QUESTION_STEPS = 5; // step 1 is the intro; steps 2-6 are questions; step 7 is review
+    const TOTAL_STEPS = steps.length; // 7
+    const CONTACT_STEP = 6; // contact-details step (format validation)
     let currentStep = 1;
 
     /* ── Open modal ── */
@@ -228,11 +238,19 @@
         el.classList.toggle('active', isActive);
       });
 
-      if (currentStep <= QUESTION_STEPS) {
-        indicator.textContent = `Step ${currentStep} of ${QUESTION_STEPS}`;
-        fill.style.width = `${(currentStep / QUESTION_STEPS) * 100}%`;
+      if (currentStep === 1) {
+        // Intro card — no progress bar yet
+        progress.classList.add('rfp-hidden');
+        title.textContent = 'Request a Proposal';
+      } else if (currentStep <= QUESTION_STEPS + 1) {
+        // Question steps (2-6) display as 1..QUESTION_STEPS
+        const qNum = currentStep - 1;
+        progress.classList.remove('rfp-hidden');
+        indicator.textContent = `Step ${qNum} of ${QUESTION_STEPS}`;
+        fill.style.width = `${(qNum / QUESTION_STEPS) * 100}%`;
         title.textContent = 'Request a Proposal';
       } else {
+        progress.classList.remove('rfp-hidden');
         indicator.textContent = 'Review';
         fill.style.width = '100%';
         title.textContent = 'Review Your Answers';
@@ -288,6 +306,11 @@
       const cbs = stepEl.querySelectorAll('input[type="checkbox"]');
       if (cbs.length > 0 && !Array.from(cbs).some(c => c.checked)) return false;
 
+      // Radios: at least one option in the group selected
+      // (a radio's .value is always truthy, so the blank check below can't catch this)
+      const radios = stepEl.querySelectorAll('input[type="radio"]');
+      if (radios.length > 0 && !Array.from(radios).some(r => r.checked)) return false;
+
       // Required fields (blank check)
       const required = stepEl.querySelectorAll('input[required], select[required]');
       for (const inp of required) {
@@ -298,8 +321,8 @@
       }
       if (!valid) return false;
 
-      // Step 5 — format validation
-      if (stepNum === 5) {
+      // Contact step — format validation
+      if (stepNum === CONTACT_STEP) {
         const emailEl = stepEl.querySelector('#rfp-email');
         const urlEl   = stepEl.querySelector('#rfp-url');
         const phoneEl = stepEl.querySelector('#rfp-phone');
