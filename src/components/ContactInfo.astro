@@ -1,5 +1,6 @@
 ---
-// ContactInfo — CTA paragraph + social media links
+// ContactInfo - CTA paragraph + social media links
+import { contact } from '../data/contact.js';
 ---
 
 <section class="contact-info section">
@@ -7,19 +8,19 @@
     <span class="section-label">Reach Out</span>
     <h2 class="section-heading">Get in Touch With Us</h2>
     <p class="contact-info__para">
-      Ready to grow? We'd love to hear about your business. Reach out however works best for you — we're here as a partner, not just a service.
+      Ready to grow? We'd love to hear about your business. Reach out however works best for you - we're here as a partner, not just a service.
     </p>
     <div class="social-links" aria-label="Social media links">
-      <a href="https://instagram.com/obviusdigital" target="_blank" rel="noopener noreferrer" aria-label="Obvius Digital on Instagram">
+      <a href={contact.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Obvius Digital on Instagram">
         📷 Instagram
       </a>
-      <a href="https://facebook.com/[PLACEHOLDER_FACEBOOK]" target="_blank" rel="noopener noreferrer" aria-label="Obvius Digital on Facebook">
+      <a href={contact.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Obvius Digital on Facebook">
         👍 Facebook
       </a>
-      <a href="https://linkedin.com/company/[PLACEHOLDER_LINKEDIN]" target="_blank" rel="noopener noreferrer" aria-label="Obvius Digital on LinkedIn">
+      <a href={contact.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="Obvius Digital on LinkedIn">
         💼 LinkedIn
       </a>
-      <a href="https://youtube.com/@[PLACEHOLDER_YOUTUBE]" target="_blank" rel="noopener noreferrer" aria-label="Obvius Digital on YouTube">
+      <a href={contact.social.youtube} target="_blank" rel="noopener noreferrer" aria-label="Obvius Digital on YouTube">
         ▶ YouTube
       </a>
     </div>

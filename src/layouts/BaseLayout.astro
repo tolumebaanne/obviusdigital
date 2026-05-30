@@ -2,7 +2,6 @@
 import '../styles/global.css';
 import '../styles/layout.css';
 import '../styles/components.css';
-import BackgroundEffect from '../components/BackgroundEffect.astro';
 import RfpModal from '../components/RfpModal.astro';
 
 interface Props {
@@ -11,7 +10,7 @@ interface Props {
 }
 
 const {
-  title = 'Obvius Digital — More Than Marketing',
+  title = 'Obvius Digital - More Than Marketing',
   description = 'We help small and medium-sized businesses show up with confidence, communicate clearly, and grow intentionally.',
 } = Astro.props;
 ---
@@ -25,7 +24,7 @@ const {
     <meta name="robots" content="index, follow" />
     <title>{title}</title>
 
-    <!-- Urbanist — body/secondary font (Google Fonts) -->
+    <!-- Urbanist - body/secondary font (Google Fonts) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet" />
@@ -44,7 +43,6 @@ const {
     <meta property="og:url" content="https://obviusdigital.ca" />
   </head>
   <body>
-    <BackgroundEffect />
     <div class="page-wrap">
       <slot name="header" />
       <main class="page-main">

@@ -1,5 +1,5 @@
 ---
-// RfpModal.astro — 6-step wizard with review
+// RfpModal.astro - 6-step wizard with review
 ---
 
 <div id="rfp-modal" class="rfp-modal-overlay rfp-modal-closed" aria-hidden="true" role="dialog">
@@ -38,7 +38,7 @@
         </fieldset>
       </div>
 
-      <!-- STEP 3: Services (checkboxes — highlight + manual Next) -->
+      <!-- STEP 3: Services (checkboxes - highlight + manual Next) -->
       <div class="rfp-step rfp-hidden" data-step="3">
         <fieldset>
           <legend>Which services are you interested in exploring?</legend>
@@ -239,7 +239,7 @@
       });
 
       if (currentStep === 1) {
-        // Intro card — no progress bar yet
+        // Intro card - no progress bar yet
         progress.classList.add('rfp-hidden');
         title.textContent = 'Request a Proposal';
       } else if (currentStep <= QUESTION_STEPS + 1) {
@@ -264,25 +264,25 @@
       errorEl.classList.add('rfp-hidden');
     };
 
-    /* ── Build review content — conversational labels ── */
+    /* ── Build review content - conversational labels ── */
     const buildReview = () => {
       const fd = new FormData(form);
       const services = fd.getAll('services[]');
       const rows = [
         { label: 'Your primary goal is',          value: fd.get('primary_goal') },
-        { label: 'Service(s) you require',         value: services.length ? services.join(', ') : '—' },
+        { label: 'Service(s) you require',         value: services.length ? services.join(', ') : '-' },
         { label: 'Your estimated budget',          value: fd.get('estimated_investment') },
         { label: 'Your target launch timeline',    value: fd.get('launch_timeline') },
         { label: 'Name',                           value: fd.get('name') },
         { label: 'Business name',                  value: fd.get('business_name') },
-        { label: 'Current website',                value: fd.get('website_url') || '—' },
+        { label: 'Current website',                value: fd.get('website_url') || '-' },
         { label: 'Best email to reach you',        value: fd.get('email') },
         { label: 'Best number to reach you',       value: (fd.get('country_code') || '+1') + ' ' + (fd.get('phone_number') || '') },
       ];
       reviewEl.innerHTML = rows.map(r => `
         <div class="rfp-review-row">
           <span class="rfp-review-label">${r.label}</span>
-          <span class="rfp-review-value">${r.value || '—'}</span>
+          <span class="rfp-review-value">${r.value || '-'}</span>
         </div>`).join('');
     };
 
@@ -321,7 +321,7 @@
       }
       if (!valid) return false;
 
-      // Contact step — format validation
+      // Contact step - format validation
       if (stepNum === CONTACT_STEP) {
         const emailEl = stepEl.querySelector('#rfp-email');
         const urlEl   = stepEl.querySelector('#rfp-url');

@@ -4,8 +4,8 @@
 
 :root {
   /* text */
-  --font-primary: 'Rowdies', sans-serif;      /* Display — headings, nav, brand, buttons */
-  --font-secondary: 'Urbanist', sans-serif;   /* Body — paragraphs, labels, UI text */
+  --font-primary: 'Rowdies', sans-serif;      /* Display - headings, nav, brand, buttons */
+  --font-secondary: 'Urbanist', sans-serif;   /* Body - paragraphs, labels, UI text */
 
   /* color */
   --color-red: #C0392B;

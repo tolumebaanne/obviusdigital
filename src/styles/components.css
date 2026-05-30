@@ -80,7 +80,7 @@
 }
 
 /* ===========================
-   Hero — HomeHero
+   Hero - HomeHero
    =========================== */
 
 .home-hero {
@@ -218,6 +218,14 @@
   /* flexbox */
   align-items: center;
   gap: 0.5rem;
+  /* transition - matches trusted-by logo hover */
+  transition: opacity var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.hero-work-card:hover {
+  opacity: 0.95;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
 }
 
 .hero-work-card__cat {
@@ -246,7 +254,7 @@
 }
 
 /* ===========================
-   Hero — PageHero
+   Hero - PageHero
    =========================== */
 
 .page-hero {
@@ -448,11 +456,12 @@
   /* flexbox */
   flex-direction: column;
   gap: var(--space-sm);
-  /* transition */
-  transition: box-shadow var(--transition-base), transform var(--transition-base);
+  /* transition - matches trusted-by logo hover */
+  transition: opacity var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
 }
 
 .service-tile:hover {
+  opacity: 0.95;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
@@ -578,6 +587,8 @@
   background-color: var(--color-grey-light);
   /* box model */
   padding: var(--space-md);
+  /* square card */
+  aspect-ratio: 1 / 1;
   /* border */
   border-radius: var(--radius-md);
   border: 1px solid rgba(0, 0, 0, 0.06);
@@ -585,12 +596,16 @@
   display: flex;
   /* flexbox */
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: var(--space-sm);
-  /* transition */
-  transition: box-shadow var(--transition-base), transform var(--transition-base);
+  /* transition - matches trusted-by logo hover */
+  transition: opacity var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
 }
 
 .work-card:hover {
+  opacity: 0.95;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   transform: translateY(-2px);
 }
@@ -600,7 +615,6 @@
   background-color: var(--color-white);
   /* box model */
   width: 100%;
-  height: 80px;
   /* border */
   border-radius: var(--radius-sm);
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -609,14 +623,21 @@
   /* flexbox */
   align-items: center;
   justify-content: center;
+  /* fill available vertical space within the square */
+  flex: 1;
+  min-height: 0;
   /* spacing so logos don't touch the edges */
-  padding: var(--space-sm);
+  padding: var(--space-md);
 }
 
 .work-card__logo {
+  /* centered, balanced sizing for varied aspect ratios */
   max-width: 100%;
   max-height: 100%;
+  width: auto;
+  height: auto;
   object-fit: contain;
+  margin-inline: auto;
 }
 
 .work-card__logo-placeholder {
@@ -770,9 +791,26 @@
   background-color: var(--color-grey-light);
   /* box model */
   padding: var(--space-md);
-  /* border */
+  /* square card - consistent with work cards */
+  aspect-ratio: 1 / 1;
+  /* border - neutral, matches work cards (red left accent removed) */
   border-radius: var(--radius-md);
-  border-left: 3px solid var(--color-red);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  /* display */
+  display: flex;
+  /* flexbox */
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-sm);
+  overflow: hidden;
+  /* transition - matches trusted-by logo hover */
+  transition: opacity var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.review-card:hover {
+  opacity: 0.95;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 .review-card__text {
@@ -784,7 +822,7 @@
   /* color */
   color: var(--color-grey-dark);
   /* box model */
-  margin-bottom: var(--space-sm);
+  margin-bottom: 0;
 }
 
 .review-card__author {
@@ -1019,6 +1057,14 @@
   padding: var(--space-md);
   /* border */
   border-radius: var(--radius-md);
+  /* transition - matches trusted-by logo hover */
+  transition: opacity var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.founder-card:hover {
+  opacity: 0.95;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 .founder-card__photo {
@@ -1371,7 +1417,7 @@
 
 .service-detail__deliverables li::before {
   /* other */
-  content: '—';
+  content: ' - ';
   /* color */
   color: var(--color-red);
   /* other */
@@ -1452,6 +1498,10 @@
   }
 
   .past-work__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .reviews__grid {
     grid-template-columns: 1fr 1fr;
   }
 

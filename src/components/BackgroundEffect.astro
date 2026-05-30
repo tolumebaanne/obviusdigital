@@ -1,6 +1,6 @@
 ---
-// BackgroundEffect — interactive floating particles
-// Visible on both dark and light sections — no blend mode
+// BackgroundEffect - interactive floating particles
+// Visible on both dark and light sections - no blend mode
 ---
 
 <canvas id="obvius-bg" aria-hidden="true"></canvas>
@@ -45,15 +45,15 @@
     mouse.y = e.clientY;
   }, { passive: true });
 
-  // Five types — mix of light, dark and brand so some are always visible
+  // Five types - mix of light, dark and brand so some are always visible
   // regardless of whether the underlying section is dark or light
   type Colour = [number, number, number, number];
   const PALETTE: Colour[] = [
-    [255, 255, 255, 0.22],  // white       — stands out on dark sections
-    [ 30,  30,  30, 0.18],  // near-black  — stands out on light sections
-    [192,  57,  43, 0.20],  // brand red   — visible on both
-    [180, 180, 180, 0.18],  // light grey  — soft on dark sections
-    [ 60,  60,  60, 0.16],  // mid-grey    — soft on light sections
+    [255, 255, 255, 0.22],  // white - stands out on dark sections
+    [ 30,  30,  30, 0.18],  // near-black - stands out on light sections
+    [192,  57,  43, 0.20],  // brand red - visible on both
+    [180, 180, 180, 0.18],  // light grey - soft on dark sections
+    [ 60,  60,  60, 0.16],  // mid-grey - soft on light sections
   ];
 
   interface Dot {

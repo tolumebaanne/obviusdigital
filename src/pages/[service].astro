@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import ServiceDetail from '../components/ServiceDetail.astro';
+import ServicesContactForm from '../components/ServicesContactForm.astro';
+import { servicePages } from '../data/servicePages.js';
+
+export function getStaticPaths() {
+  return servicePages.map((page) => ({
+    params: { service: page.slug },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+---
+
+<BaseLayout title={page.title}>
+  <Header slot="header" />
+  <PageHero
+    label={page.pageHero.label}
+    heading={page.pageHero.heading}
+    tagline={page.pageHero.tagline}
+  />
+  <ServiceDetail serviceName={page.serviceName} />
+  <Footer slot="footer" />
+  <ServicesContactForm />
+</BaseLayout>

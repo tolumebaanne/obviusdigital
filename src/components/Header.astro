@@ -1,11 +1,5 @@
 ---
-const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Services', href: '/services' },
-  { label: 'Our Work', href: '/work' },
-  { label: 'Contact Us', href: '/contact' },
-];
+import { primaryNav as navLinks } from '../data/navigation.js';
 
 const currentPath = Astro.url.pathname;
 ---
@@ -13,7 +7,7 @@ const currentPath = Astro.url.pathname;
 <header class="site-header">
   <div class="header-inner">
     <!-- Logo -->
-    <a href="/" class="site-logo" aria-label="Obvius Digital — Home">
+    <a href="/" class="site-logo" aria-label="Obvius Digital - Home">
       <img
         src="/images/obviuous_idents_1x/obvius_digital_logo-red_white.png"
         alt="Obvius Digital"

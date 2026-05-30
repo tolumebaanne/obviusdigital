@@ -1,5 +1,8 @@
 ---
-// HomeHero — homepage hero section
+// HomeHero - homepage hero section
+import { works } from '../data/works.js';
+
+const shuffled = [...works].sort(() => Math.random() - 0.5);
 ---
 
 <section class="home-hero">
@@ -20,18 +23,12 @@
     <div class="home-hero__work-strip">
       <span class="home-hero__work-label">Some of our work</span>
       <div class="home-hero__work-cards">
-        <div class="hero-work-card">
-          <span class="hero-work-card__cat">[PLACEHOLDER]</span>
-          <span class="hero-work-card__name">[PLACEHOLDER] Project Name</span>
-        </div>
-        <div class="hero-work-card">
-          <span class="hero-work-card__cat">[PLACEHOLDER]</span>
-          <span class="hero-work-card__name">[PLACEHOLDER] Project Name</span>
-        </div>
-        <div class="hero-work-card">
-          <span class="hero-work-card__cat">[PLACEHOLDER]</span>
-          <span class="hero-work-card__name">[PLACEHOLDER] Project Name</span>
-        </div>
+        {shuffled.slice(0, 3).map((work) => (
+          <div class="hero-work-card">
+            <span class="hero-work-card__cat">{work.category}</span>
+            <span class="hero-work-card__name">{work.brandName}</span>
+          </div>
+        ))}
       </div>
     </div>
   </div>

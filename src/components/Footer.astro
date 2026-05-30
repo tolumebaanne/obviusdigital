@@ -1,18 +1,6 @@
 ---
-const sitemapLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Our Work', href: '/work' },
-  { label: 'Contact Us', href: '/contact' },
-];
-
-const servicesLinks = [
-  { label: '360 Media Production', href: '/production' },
-  { label: 'Digital Marketing', href: '/digital-marketing' },
-  { label: 'Consulting', href: '/consulting' },
-  { label: 'Training', href: '/training' },
-  { label: 'Website Development', href: '/web-dev' },
-];
+import { footerSitemap as sitemapLinks, footerServices as servicesLinks } from '../data/navigation.js';
+import { contact } from '../data/contact.js';
 
 const year = new Date().getFullYear();
 ---
@@ -23,7 +11,7 @@ const year = new Date().getFullYear();
 
       <!-- Column 1: Logo + USP + Email signup -->
       <div class="footer-col">
-        <a href="/" aria-label="Obvius Digital — Home">
+        <a href="/" aria-label="Obvius Digital - Home">
           <img
             src="/images/obviuous_idents_1x/obvius_digital_logo-red_white.png"
             alt="Obvius Digital"
@@ -70,10 +58,10 @@ const year = new Date().getFullYear();
       <!-- Column 4: Contact -->
       <div class="footer-col footer-contact">
         <h4>Contact</h4>
-        <p><a href="tel:+14168844080">+1 416 884 4080</a></p>
-        <p><a href="mailto:hello@obviusdigital.ca">hello@obviusdigital.ca</a></p>
-        <p><a href="https://instagram.com/obviusdigital" target="_blank" rel="noopener noreferrer">@obviusdigital</a></p>
-        <p style="margin-top: 0.75rem; color: var(--color-grey-mid); font-size: 0.8125rem;">Toronto, Canada</p>
+        <p><a href={`tel:${contact.tel}`}>{contact.phone}</a></p>
+        <p><a href={`mailto:${contact.email}`}>{contact.email}</a></p>
+        <p><a href={contact.instagram} target="_blank" rel="noopener noreferrer">{contact.instagramHandle}</a></p>
+        <p style="margin-top: 0.75rem; color: var(--color-grey-mid); font-size: 0.8125rem;">{contact.location}</p>
       </div>
 
     </div>
