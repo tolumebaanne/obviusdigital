@@ -1951,8 +1951,9 @@
 
 .about-content__media {
   width: 100%;
+  max-width: 300px;
+  margin-inline: auto;
   aspect-ratio: 9 / 16;
-  max-height: 520px;
   object-fit: cover;
   border-radius: var(--radius-md);
   display: block;
