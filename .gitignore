@@ -24,7 +24,7 @@ pnpm-debug.log*
 .idea/
 
 # project build docs
-obvius_build_docs/
+obvious_build_docs/
 
 # internal standards doc (not part of the site)
 m0t_*.md
