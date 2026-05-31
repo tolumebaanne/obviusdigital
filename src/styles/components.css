@@ -1948,3 +1948,12 @@
 .mt-1 {
   margin-top: 1rem;
 }
+
+.about-content__media {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  max-height: 520px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  display: block;
+}
