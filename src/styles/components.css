@@ -1965,7 +1965,7 @@
 .about-hero-media {
   /* box model */
   width: 100%;
-  aspect-ratio: 5260 / 2340;
+  aspect-ratio: 5260 / 1170;
   margin-top: var(--space-md);
   /* border */
   border-radius: var(--radius-md);
@@ -1981,5 +1981,5 @@
   display: block;
   /* other */
   object-fit: cover;
-  object-position: bottom;
+  object-position: center;
 }
