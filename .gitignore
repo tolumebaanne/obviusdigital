@@ -1,5 +1,6 @@
 # build output
 dist/
+
 # generated types
 .astro/
 
@@ -10,11 +11,7 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# internal standards document (m0t — Method of Truth)
-m0t_*.md
 pnpm-debug.log*
-
 
 # environment variables
 .env
@@ -27,7 +24,7 @@ pnpm-debug.log*
 .idea/
 
 # project build docs
-obvious_build_docs/
+obvius_build_docs/
 
-# Internal standards doc (not part of the site)
+# internal standards doc (not part of the site)
 m0t_*.md
