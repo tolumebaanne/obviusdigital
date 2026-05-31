@@ -507,6 +507,30 @@
   background-color: var(--color-black);
   /* box model */
   padding-block: var(--space-lg);
+  /* positioning */
+  position: relative;
+  overflow: hidden;
+}
+
+.why-us-grid::after {
+  /* other */
+  content: '';
+  pointer-events: none;
+  /* positioning */
+  position: absolute;
+  inset: 0;
+  /* color */
+  background-image: url('/images/pexels-a-darmel-7710082.jpg');
+  background-size: cover;
+  background-position: center;
+  /* other */
+  opacity: 0.1;
+}
+
+.why-us-grid .container {
+  /* positioning */
+  position: relative;
+  z-index: 1;
 }
 
 .why-us-grid__cells {
@@ -2003,22 +2027,3 @@
   opacity: 0.05;
 }
 
-/* ===========================
-   Why Us Grid - Cards Overlay
-   =========================== */
-
-.why-us-grid__cells::before {
-  /* other */
-  content: '';
-  pointer-events: none;
-  /* positioning */
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  /* color */
-  background-image: url('/images/pexels-a-darmel-7710082.jpg');
-  background-size: cover;
-  background-position: center;
-  /* other */
-  opacity: 0.05;
-}
