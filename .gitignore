@@ -10,6 +10,9 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# internal standards document (m0t — Method of Truth)
+m0t_*.md
 pnpm-debug.log*
 
 
@@ -25,3 +28,6 @@ pnpm-debug.log*
 
 # project build docs
 obvious_build_docs/
+
+# Internal standards doc (not part of the site)
+m0t_*.md

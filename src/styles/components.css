@@ -1950,8 +1950,36 @@
 }
 
 .about-content__media {
+  /* box model */
   display: block;
   width: 100%;
   height: auto;
+  /* border */
   border-radius: var(--radius-md);
+}
+
+/* ===========================
+   About - Hero Media
+   =========================== */
+
+.about-hero-media {
+  /* box model */
+  width: 100%;
+  aspect-ratio: 5260 / 2340;
+  margin-top: var(--space-md);
+  /* border */
+  border-radius: var(--radius-md);
+  /* other */
+  overflow: hidden;
+}
+
+.about-hero-media img {
+  /* box model */
+  width: 100%;
+  height: 100%;
+  /* display */
+  display: block;
+  /* other */
+  object-fit: cover;
+  object-position: bottom;
 }
