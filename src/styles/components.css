@@ -524,7 +524,7 @@
   background-size: cover;
   background-position: center;
   /* other */
-  opacity: 0.1;
+  opacity: 0.35;
 }
 
 .why-us-grid .container {
@@ -551,7 +551,7 @@
 
 .why-us-cell {
   /* color */
-  background-color: var(--color-black-mid);
+  background-color: rgba(10, 10, 10, 0.72);
   /* box model */
   padding: var(--space-md);
   /* transition */
@@ -559,7 +559,7 @@
 }
 
 .why-us-cell:hover {
-  background-color: rgba(192, 57, 43, 0.08);
+  background-color: rgba(192, 57, 43, 0.18);
 }
 
 .why-us-cell__heading {
