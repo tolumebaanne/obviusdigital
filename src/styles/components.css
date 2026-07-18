@@ -2386,6 +2386,7 @@
   font-size: 1.25rem;
   letter-spacing: 0.2em;
   text-align: center;
+  text-transform: uppercase;
 }
 
 .admin-login__resend {
