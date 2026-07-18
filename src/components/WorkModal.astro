@@ -49,6 +49,10 @@
     let images = [];
     let currentIndex = 0;
     let lastFocusedEl = null;
+    let autoplayTimer = null;
+
+    const AUTOPLAY_MS = 4500;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const renderSlide = () => {
       track.style.transform = `translateX(-${currentIndex * 100}%)`;
@@ -62,8 +66,26 @@
       renderSlide();
     };
 
-    prevBtn.addEventListener('click', () => goTo(currentIndex - 1));
-    nextBtn.addEventListener('click', () => goTo(currentIndex + 1));
+    const stopAutoplay = () => {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    };
+
+    const startAutoplay = () => {
+      stopAutoplay();
+      if (prefersReducedMotion || images.length <= 1) return;
+      autoplayTimer = setInterval(() => goTo(currentIndex + 1), AUTOPLAY_MS);
+    };
+
+    const goToManual = index => {
+      goTo(index);
+      startAutoplay();
+    };
+
+    prevBtn.addEventListener('click', () => goToManual(currentIndex - 1));
+    nextBtn.addEventListener('click', () => goToManual(currentIndex + 1));
 
     /* ── Touch swipe ── */
     let touchStartX = 0;
@@ -71,7 +93,7 @@
     track.addEventListener('touchend', e => {
       const delta = e.changedTouches[0].clientX - touchStartX;
       if (Math.abs(delta) < 40) return;
-      goTo(delta < 0 ? currentIndex + 1 : currentIndex - 1);
+      goToManual(delta < 0 ? currentIndex + 1 : currentIndex - 1);
     }, { passive: true });
 
     /* ── Open / close ── */
@@ -87,6 +109,7 @@
       modal.classList.add('rfp-modal-closed');
       modal.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
+      stopAutoplay();
       if (lastFocusedEl instanceof HTMLElement) lastFocusedEl.focus();
     };
 
@@ -95,24 +118,24 @@
     document.addEventListener('keydown', e => {
       if (modal.classList.contains('rfp-modal-closed')) return;
       if (e.key === 'Escape') closeModal();
-      if (e.key === 'ArrowLeft') goTo(currentIndex - 1);
-      if (e.key === 'ArrowRight') goTo(currentIndex + 1);
+      if (e.key === 'ArrowLeft') goToManual(currentIndex - 1);
+      if (e.key === 'ArrowRight') goToManual(currentIndex + 1);
     });
 
     /* ── Populate + open with a work item ── */
     window.openWorkModal = work => {
-      images = Array.isArray(work.images) && work.images.length ? work.images : (work.logo ? [work.logo] : []);
+      images = Array.isArray(work.images) ? work.images : [];
       currentIndex = 0;
 
       const safeBrandName = escapeHtml(work.brandName || '');
-      track.innerHTML = images
-        .map(src => `<div class="work-modal-slide"><img src="${escapeHtml(src)}" alt="${safeBrandName} project photo" loading="lazy"></div>`)
-        .join('');
+      track.innerHTML = images.length
+        ? images.map(src => `<div class="work-modal-slide"><img src="${escapeHtml(src)}" alt="${safeBrandName} project photo" loading="lazy"></div>`).join('')
+        : '<div class="work-modal-slide work-modal-slide--empty"><span>No photos added yet</span></div>';
 
       dotsEl.innerHTML = images
         .map((_, idx) => `<button type="button" class="work-modal-dot${idx === 0 ? ' work-modal-dot--active' : ''}" aria-label="Go to image ${idx + 1}"></button>`)
         .join('');
-      dotsEl.querySelectorAll('.work-modal-dot').forEach((dot, idx) => dot.addEventListener('click', () => goTo(idx)));
+      dotsEl.querySelectorAll('.work-modal-dot').forEach((dot, idx) => dot.addEventListener('click', () => goToManual(idx)));
 
       const multiImage = images.length > 1;
       prevBtn.classList.toggle('work-modal-nav--hidden', !multiImage);
@@ -132,6 +155,7 @@
 
       renderSlide();
       openModal();
+      startAutoplay();
     };
 
     /* ── Event delegation: any element with data-work-trigger + data-work JSON opens the modal ── */

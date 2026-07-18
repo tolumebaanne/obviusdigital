@@ -2184,6 +2184,18 @@
   height: 100%;
 }
 
+.work-modal-slide--empty {
+  /* text */
+  font-size: 0.9375rem;
+  /* color */
+  color: rgba(255, 255, 255, 0.4);
+  /* display */
+  display: flex;
+  /* flexbox */
+  align-items: center;
+  justify-content: center;
+}
+
 .work-modal-slide img {
   /* box model */
   width: 100%;
