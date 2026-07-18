@@ -19,10 +19,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       </form>
 
       <form id="admin-verify-form" class="admin-login__form rfp-hidden">
-        <p class="rfp-helper" id="admin-verify-helper">Check your email for a 4-character code.</p>
+        <p class="rfp-helper" id="admin-verify-helper">Check your email for an 8-digit code.</p>
         <div class="rfp-field-group">
           <label for="admin-code">Login Code</label>
-          <input type="text" id="admin-code" name="code" class="rfp-input admin-login__code-input" maxlength="4" autocomplete="one-time-code" required>
+          <input type="text" inputmode="numeric" id="admin-code" name="code" class="rfp-input admin-login__code-input" maxlength="8" autocomplete="one-time-code" required>
           <span class="rfp-field-error" id="admin-verify-error"></span>
         </div>
         <button type="submit" id="admin-verify-submit" class="rfp-btn-primary admin-login__submit">Log In</button>
@@ -89,7 +89,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     resendBtn.addEventListener('click', requestCode);
 
     codeInput.addEventListener('input', () => {
-      codeInput.value = codeInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4);
+      codeInput.value = codeInput.value.replace(/[^0-9]/g, '').slice(0, 8);
     });
 
     verifyForm.addEventListener('submit', async e => {

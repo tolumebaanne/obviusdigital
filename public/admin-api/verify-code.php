@@ -12,7 +12,7 @@ admin_session_start();
 $inputJSON = file_get_contents('php://input');
 $input = json_decode($inputJSON, true);
 $code = is_array($input) ? ($input['code'] ?? '') : ($_POST['code'] ?? '');
-$code = strtoupper(trim((string) $code));
+$code = trim((string) $code);
 $email = is_array($input) ? ($input['email'] ?? '') : ($_POST['email'] ?? '');
 $email = strtolower(trim((string) $email));
 

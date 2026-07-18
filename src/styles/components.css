@@ -2383,10 +2383,9 @@
 .admin-login__code-input {
   /* text */
   font-family: var(--font-primary);
-  font-size: 1.5rem;
-  letter-spacing: 0.3em;
+  font-size: 1.25rem;
+  letter-spacing: 0.2em;
   text-align: center;
-  text-transform: uppercase;
 }
 
 .admin-login__resend {

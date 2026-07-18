@@ -44,13 +44,10 @@ $authorized = $stmt->fetch();
 if ($authorized !== false) {
     // Codes are short-lived, single-use, and capped at 5 guesses — m0t.AUTH.2.5
     // (Authorization Codes Are Ephemeral) applied to a login code rather than
-    // an OAuth grant. 4 alphanumeric characters (~1M combinations) rather
-    // than 4 digits (10,000); O/0 and I/1 are excluded so it's unambiguous
-    // to type back.
-    $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    // an OAuth grant. 8 numeric digits (100M combinations).
     $code = '';
-    for ($i = 0; $i < 4; $i++) {
-        $code .= $alphabet[random_int(0, strlen($alphabet) - 1)];
+    for ($i = 0; $i < 8; $i++) {
+        $code .= (string) random_int(0, 9);
     }
     $codeHash = password_hash($code, PASSWORD_BCRYPT);
     $expiresAt = (new DateTimeImmutable('+10 minutes'))->format('Y-m-d H:i:s');
