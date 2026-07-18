@@ -66,15 +66,17 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       listEl.innerHTML = works.map((work, idx) => `
         <li class="admin-work-list__item" data-id="${work.id}">
           <span class="admin-work-list__thumb">
-            ${work.images[0] ? `<img src="${escapeHtml(work.images[0].image_path)}" alt="" loading="lazy">` : ''}
+            ${work.thumbnail ? `<img src="${escapeHtml(work.thumbnail)}" alt="" loading="lazy">` : ''}
           </span>
           <span class="admin-work-list__info">
             <strong>${escapeHtml(work.brand_name)}</strong>
             <span>${escapeHtml(work.category)}</span>
+            <span class="admin-work-list__status admin-work-list__status--${work.is_published ? 'published' : 'draft'}">${work.is_published ? 'Published' : 'Draft'}</span>
           </span>
           <span class="admin-work-list__controls">
             <button type="button" class="admin-icon-btn" data-move-up ${idx === 0 ? 'disabled' : ''} aria-label="Move up">&uarr;</button>
             <button type="button" class="admin-icon-btn" data-move-down ${idx === works.length - 1 ? 'disabled' : ''} aria-label="Move down">&darr;</button>
+            <button type="button" class="btn btn--outline-red btn--sm" data-toggle-publish>${work.is_published ? 'Unpublish' : 'Publish'}</button>
             <a href="/admin/edit?id=${work.id}" class="btn btn--outline-red btn--sm">Edit</a>
             <button type="button" class="admin-icon-btn admin-icon-btn--danger" data-delete aria-label="Delete">&times;</button>
           </span>
@@ -108,6 +110,17 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         [works[index + 1], works[index]] = [works[index], works[index + 1]];
         render();
         await persistOrder();
+      } else if (e.target.closest('[data-toggle-publish]')) {
+        const res = await fetch('/admin-api/work-toggle-publish.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          works[index].is_published = data.is_published;
+          render();
+        }
       } else if (e.target.closest('[data-delete]')) {
         if (!window.confirm(`Delete "${works[index].brand_name}"? This can't be undone.`)) return;
         await fetch('/admin-api/work-delete.php', {

@@ -12,12 +12,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 try {
     $pdo = get_pdo();
-    $works = $pdo->query('SELECT id, brand_name AS brandName, category, description, client_url AS clientUrl FROM works ORDER BY sort_order ASC, id DESC')->fetchAll();
+    $works = $pdo->query('SELECT id, brand_name AS brandName, category, description, client_url AS clientUrl, thumbnail_path AS thumbnail FROM works WHERE is_published = 1 ORDER BY sort_order ASC, id DESC')->fetchAll();
 
     $imgStmt = $pdo->prepare('SELECT image_path FROM work_images WHERE work_id = ? ORDER BY sort_order ASC, id ASC');
     foreach ($works as &$work) {
         $imgStmt->execute([$work['id']]);
         $work['images'] = array_column($imgStmt->fetchAll(), 'image_path');
+        // Fall back to the first gallery image for entries created before the
+        // dedicated thumbnail field existed.
+        if ($work['thumbnail'] === null) {
+            $work['thumbnail'] = $work['images'][0] ?? null;
+        }
         unset($work['id']);
     }
     unset($work);

@@ -8,6 +8,7 @@
     <p class="section-intro">
       Every project we take on reflects the brand behind it. Here are some examples of what we've delivered.
     </p>
+    <div class="past-work__filters" id="past-work-filters"></div>
     <div class="past-work__grid" id="past-work-grid">
       <p class="past-work__status" id="past-work-status">Loading our work&hellip;</p>
     </div>
@@ -16,6 +17,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', async () => {
+    const filtersEl = document.getElementById('past-work-filters');
     const grid = document.getElementById('past-work-grid');
     const status = document.getElementById('past-work-status');
     if (!grid) return;
@@ -23,19 +25,19 @@
     const escapeHtml = str => String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const escapeAttr = str => JSON.stringify(str).replace(/'/g, '&#39;');
 
-    try {
-      const res = await fetch('/works-feed.php');
-      if (!res.ok) throw new Error('Feed request failed');
-      const data = await res.json();
-      const works = Array.isArray(data.works) ? data.works : [];
+    let works = [];
+    let activeCategory = 'All';
 
-      if (works.length === 0) {
-        if (status) status.textContent = "We're adding our latest work here soon — check back shortly.";
+    const renderCards = () => {
+      const filtered = activeCategory === 'All' ? works : works.filter(w => w.category === activeCategory);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p class="past-work__status">No work in this category yet.</p>';
         return;
       }
 
-      grid.innerHTML = works.map(work => {
-        const thumbnail = Array.isArray(work.images) && work.images.length ? work.images[0] : '';
+      grid.innerHTML = filtered.map(work => {
+        const thumbnail = work.thumbnail || (Array.isArray(work.images) && work.images.length ? work.images[0] : '');
         const brandName = escapeHtml(work.brandName || '');
         const category = escapeHtml(work.category || '');
         return `
@@ -48,6 +50,41 @@
           </button>
         `;
       }).join('');
+    };
+
+    const renderFilters = () => {
+      const categories = ['All', ...new Set(works.map(w => w.category).filter(Boolean))];
+      if (categories.length <= 2) {
+        // Not worth showing a filter bar for zero or one real category
+        filtersEl.innerHTML = '';
+        return;
+      }
+      filtersEl.innerHTML = categories.map(cat => `
+        <button type="button" class="past-work__filter-btn${cat === activeCategory ? ' past-work__filter-btn--active' : ''}" data-category="${escapeHtml(cat)}">${escapeHtml(cat)}</button>
+      `).join('');
+    };
+
+    filtersEl.addEventListener('click', e => {
+      const btn = e.target.closest('[data-category]');
+      if (!btn) return;
+      activeCategory = btn.dataset.category;
+      renderFilters();
+      renderCards();
+    });
+
+    try {
+      const res = await fetch('/works-feed.php');
+      if (!res.ok) throw new Error('Feed request failed');
+      const data = await res.json();
+      works = Array.isArray(data.works) ? data.works : [];
+
+      if (works.length === 0) {
+        if (status) status.textContent = "We're adding our latest work here soon — check back shortly.";
+        return;
+      }
+
+      renderFilters();
+      renderCards();
     } catch (err) {
       console.error(err);
       if (status) status.textContent = "We couldn't load our work right now — please refresh or check back shortly.";
