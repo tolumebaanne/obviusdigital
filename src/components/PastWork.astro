@@ -1,24 +1,56 @@
 ---
-import { works } from '../data/works.js';
 ---
 
 <section class="past-work section">
   <div class="container">
     <span class="section-label">Our Work</span>
     <h2 class="section-heading">A Few Things We've Built</h2>
-    <p style="color: var(--color-grey-dark); max-width: 60ch; margin-bottom: 2rem; font-size: 1rem;">
+    <p class="section-intro">
       Every project we take on reflects the brand behind it. Here are some examples of what we've delivered.
     </p>
-    <div class="past-work__grid">
-      {works.map((work) => (
-        <div class="work-card">
-          <div class="work-card__logo-area">
-            <img src={work.logo} alt={`${work.brandName} logo`} class="work-card__logo" loading="lazy" />
-          </div>
-          <span class="work-card__tag">{work.category}</span>
-          <h3 class="work-card__name">{work.brandName}</h3>
-        </div>
-      ))}
+    <div class="past-work__grid" id="past-work-grid">
+      <p class="past-work__status" id="past-work-status">Loading our work&hellip;</p>
     </div>
   </div>
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const grid = document.getElementById('past-work-grid');
+    const status = document.getElementById('past-work-status');
+    if (!grid) return;
+
+    const escapeHtml = str => String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const escapeAttr = str => JSON.stringify(str).replace(/'/g, '&#39;');
+
+    try {
+      const res = await fetch('/works-feed.php');
+      if (!res.ok) throw new Error('Feed request failed');
+      const data = await res.json();
+      const works = Array.isArray(data.works) ? data.works : [];
+
+      if (works.length === 0) {
+        if (status) status.textContent = "We're adding our latest work here soon — check back shortly.";
+        return;
+      }
+
+      grid.innerHTML = works.map(work => {
+        const thumbnail = Array.isArray(work.images) && work.images.length ? work.images[0] : '';
+        const brandName = escapeHtml(work.brandName || '');
+        const category = escapeHtml(work.category || '');
+        return `
+          <button type="button" class="work-card" data-work-trigger data-work='${escapeAttr(work)}'>
+            <div class="work-card__logo-area">
+              <img src="${escapeHtml(thumbnail)}" alt="${brandName} project photo" class="work-card__logo" loading="lazy">
+            </div>
+            <span class="work-card__tag">${category}</span>
+            <h3 class="work-card__name">${brandName}</h3>
+          </button>
+        `;
+      }).join('');
+    } catch (err) {
+      console.error(err);
+      if (status) status.textContent = "We couldn't load our work right now — please refresh or check back shortly.";
+    }
+  });
+</script>

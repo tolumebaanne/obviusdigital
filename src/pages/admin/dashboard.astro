@@ -1,0 +1,206 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Dashboard - Portfolio Admin" description="Manage the Our Work portfolio." noindex>
+  <section class="admin-dashboard section">
+    <div class="container">
+      <div class="admin-dashboard__header">
+        <div>
+          <span class="section-label">Portfolio Admin</span>
+          <h1 class="section-heading">Our Work</h1>
+        </div>
+        <div class="admin-dashboard__actions">
+          <a href="/admin/edit" class="rfp-btn-primary">Add New</a>
+          <button type="button" id="admin-logout" class="btn btn--outline-red btn--sm">Log Out</button>
+        </div>
+      </div>
+
+      <p id="admin-dashboard-status" class="past-work__status">Loading…</p>
+      <ul id="admin-work-list" class="admin-work-list"></ul>
+
+      <div class="admin-dashboard__panels">
+        <div class="admin-panel" id="admin-access-panel">
+          <h2 class="admin-panel__heading">Team Access</h2>
+          <p class="admin-panel__desc">Anyone on this list can log in with an emailed code.</p>
+          <ul id="admin-email-list" class="admin-email-list"></ul>
+          <form id="admin-email-add-form" class="admin-panel__form rfp-hidden">
+            <input type="email" id="admin-email-add-input" class="rfp-input" placeholder="name@example.com" required>
+            <button type="submit" class="btn btn--outline-red btn--sm">Add</button>
+          </form>
+          <span class="rfp-field-error" id="admin-access-error"></span>
+        </div>
+
+        <div class="admin-panel">
+          <h2 class="admin-panel__heading">Recent Logins</h2>
+          <ul id="admin-login-log" class="admin-login-log"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const statusEl  = document.getElementById('admin-dashboard-status');
+    const listEl     = document.getElementById('admin-work-list');
+    const logoutBtn   = document.getElementById('admin-logout');
+
+    const escapeHtml = str => String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    const sessionRes = await fetch('/admin-api/session.php').then(r => r.json()).catch(() => ({ authenticated: false }));
+    if (!sessionRes.authenticated) {
+      window.location.href = '/admin/';
+      return;
+    }
+
+    let works = [];
+
+    const render = () => {
+      if (works.length === 0) {
+        statusEl.textContent = 'No work added yet — click "Add New" to create your first entry.';
+        listEl.innerHTML = '';
+        return;
+      }
+      statusEl.textContent = '';
+      listEl.innerHTML = works.map((work, idx) => `
+        <li class="admin-work-list__item" data-id="${work.id}">
+          <span class="admin-work-list__thumb">
+            ${work.images[0] ? `<img src="${escapeHtml(work.images[0].image_path)}" alt="" loading="lazy">` : ''}
+          </span>
+          <span class="admin-work-list__info">
+            <strong>${escapeHtml(work.brand_name)}</strong>
+            <span>${escapeHtml(work.category)}</span>
+          </span>
+          <span class="admin-work-list__controls">
+            <button type="button" class="admin-icon-btn" data-move-up ${idx === 0 ? 'disabled' : ''} aria-label="Move up">&uarr;</button>
+            <button type="button" class="admin-icon-btn" data-move-down ${idx === works.length - 1 ? 'disabled' : ''} aria-label="Move down">&darr;</button>
+            <a href="/admin/edit?id=${work.id}" class="btn btn--outline-red btn--sm">Edit</a>
+            <button type="button" class="admin-icon-btn admin-icon-btn--danger" data-delete aria-label="Delete">&times;</button>
+          </span>
+        </li>
+      `).join('');
+    };
+
+    const loadWorks = async () => {
+      const data = await fetch('/admin-api/works.php').then(r => r.json());
+      works = data.works || [];
+      render();
+    };
+
+    const persistOrder = () => fetch('/admin-api/works-reorder.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ order: works.map(w => w.id) }),
+    });
+
+    listEl.addEventListener('click', async e => {
+      const item = e.target.closest('.admin-work-list__item');
+      if (!item) return;
+      const id = Number(item.dataset.id);
+      const index = works.findIndex(w => w.id === id);
+
+      if (e.target.closest('[data-move-up]') && index > 0) {
+        [works[index - 1], works[index]] = [works[index], works[index - 1]];
+        render();
+        await persistOrder();
+      } else if (e.target.closest('[data-move-down]') && index < works.length - 1) {
+        [works[index + 1], works[index]] = [works[index], works[index + 1]];
+        render();
+        await persistOrder();
+      } else if (e.target.closest('[data-delete]')) {
+        if (!window.confirm(`Delete "${works[index].brand_name}"? This can't be undone.`)) return;
+        await fetch('/admin-api/work-delete.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id }),
+        });
+        await loadWorks();
+      }
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+      await fetch('/admin-api/logout.php', { method: 'POST' });
+      window.location.href = '/admin/';
+    });
+
+    const emailListEl     = document.getElementById('admin-email-list');
+    const emailAddForm      = document.getElementById('admin-email-add-form');
+    const emailAddInput       = document.getElementById('admin-email-add-input');
+    const accessError           = document.getElementById('admin-access-error');
+    const loginLogEl               = document.getElementById('admin-login-log');
+
+    // Everyone can see the list and remove non-admin rows. Only an admin can
+    // remove an admin row (the server enforces this too), and only an admin
+    // ever sees the "add" form at all.
+    const loadEmails = async () => {
+      const data = await fetch('/admin-api/admin-emails.php').then(r => r.json());
+      const emails = data.emails || [];
+      emailListEl.innerHTML = emails.map(e => {
+        const canRemove = !e.is_admin || sessionRes.is_super_admin;
+        return `
+          <li class="admin-email-list__row" data-id="${e.id}">
+            <span>${escapeHtml(e.email)}${e.is_admin ? ' <em>(admin)</em>' : ''}</span>
+            ${canRemove ? '<button type="button" class="admin-icon-btn admin-icon-btn--danger" data-remove-email aria-label="Remove">&times;</button>' : ''}
+          </li>
+        `;
+      }).join('');
+    };
+
+    if (sessionRes.is_super_admin) {
+      emailAddForm.classList.remove('rfp-hidden');
+    }
+
+    emailAddForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      accessError.textContent = '';
+      const res = await fetch('/admin-api/admin-emails.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailAddInput.value.trim() }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        emailAddInput.value = '';
+        await loadEmails();
+      } else {
+        accessError.textContent = data.message || 'Could not add that email.';
+      }
+    });
+
+    emailListEl.addEventListener('click', async e => {
+      const btn = e.target.closest('[data-remove-email]');
+      if (!btn) return;
+      const row = btn.closest('.admin-email-list__row');
+      const id = Number(row.dataset.id);
+      accessError.textContent = '';
+      const res = await fetch('/admin-api/admin-email-remove.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        await loadEmails();
+      } else {
+        accessError.textContent = data.message || 'Could not remove that email.';
+      }
+    });
+
+    const loadLoginLog = async () => {
+      const data = await fetch('/admin-api/login-log.php').then(r => r.json());
+      const logs = data.logs || [];
+      loginLogEl.innerHTML = logs.length
+        ? logs.map(l => `
+            <li class="admin-login-log__row">
+              <span>${escapeHtml(l.email)}</span>
+              <span>${escapeHtml(l.ip_address)}</span>
+              <span>${new Date(l.logged_in_at.replace(' ', 'T')).toLocaleString()}</span>
+            </li>
+          `).join('')
+        : '<li class="admin-login-log__empty">No logins yet.</li>';
+    };
+
+    await Promise.all([loadWorks(), loadEmails(), loadLoginLog()]);
+  });
+</script>

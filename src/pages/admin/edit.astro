@@ -1,0 +1,191 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Edit Work - Portfolio Admin" description="Add or edit a portfolio work item." noindex>
+  <section class="admin-edit section">
+    <div class="container container--narrow">
+      <span class="section-label">Portfolio Admin</span>
+      <h1 class="section-heading" id="admin-edit-heading">Add Work</h1>
+
+      <form id="admin-edit-form" class="admin-edit__form">
+        <input type="hidden" id="work-id" name="id">
+
+        <div class="rfp-field-group">
+          <label for="brand-name">Brand / Client Name*</label>
+          <input type="text" id="brand-name" name="brand_name" class="rfp-input" required>
+        </div>
+
+        <div class="rfp-field-group">
+          <label for="category">Category*</label>
+          <input type="text" id="category" name="category" class="rfp-input" placeholder="e.g., Web Design, Social Media Strategy" required>
+        </div>
+
+        <div class="rfp-field-group">
+          <label for="description">Description*</label>
+          <textarea id="description" name="description" class="rfp-input admin-edit__textarea" rows="5" required></textarea>
+        </div>
+
+        <div class="rfp-field-group">
+          <label for="client-url">Client Website (optional)</label>
+          <input type="url" id="client-url" name="client_url" class="rfp-input" placeholder="https://clientwebsite.com">
+        </div>
+
+        <div class="rfp-field-group">
+          <label>Photos</label>
+          <p class="rfp-helper">Drag to reorder, or use the arrows. The first photo shows first in the gallery. JPG, PNG, or WEBP, up to 5MB each.</p>
+          <ul id="admin-edit-images" class="admin-edit__images"></ul>
+          <input type="file" id="admin-edit-file-input" accept="image/jpeg,image/png,image/webp" multiple>
+        </div>
+
+        <div id="admin-edit-error" class="rfp-error rfp-hidden"></div>
+
+        <div class="admin-edit__footer">
+          <a href="/admin/dashboard" class="btn btn--outline-red btn--sm">Cancel</a>
+          <button type="submit" id="admin-edit-submit" class="rfp-btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const form            = document.getElementById('admin-edit-form');
+    const heading          = document.getElementById('admin-edit-heading');
+    const idInput            = document.getElementById('work-id');
+    const brandInput          = document.getElementById('brand-name');
+    const categoryInput        = document.getElementById('category');
+    const descriptionInput      = document.getElementById('description');
+    const clientUrlInput          = document.getElementById('client-url');
+    const imagesList                = document.getElementById('admin-edit-images');
+    const fileInput                  = document.getElementById('admin-edit-file-input');
+    const errorEl                      = document.getElementById('admin-edit-error');
+    const submitBtn                     = document.getElementById('admin-edit-submit');
+
+    const sessionRes = await fetch('/admin-api/session.php').then(r => r.json()).catch(() => ({ authenticated: false }));
+    if (!sessionRes.authenticated) {
+      window.location.href = '/admin/';
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const workId = params.get('id');
+
+    // items: { kind: 'existing', id, path } | { kind: 'new', file }
+    let items = [];
+    let dragIndex = null;
+
+    const escapeHtml = str => String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    const renderImages = () => {
+      imagesList.innerHTML = items.map((item, pos) => {
+        const src = item.kind === 'existing' ? item.path : URL.createObjectURL(item.file);
+        return `
+          <li class="admin-edit__image" draggable="true" data-pos="${pos}">
+            <img src="${escapeHtml(src)}" alt="">
+            <span class="admin-edit__image-controls">
+              <button type="button" class="admin-icon-btn" data-move-left ${pos === 0 ? 'disabled' : ''} aria-label="Move earlier">&larr;</button>
+              <button type="button" class="admin-icon-btn" data-move-right ${pos === items.length - 1 ? 'disabled' : ''} aria-label="Move later">&rarr;</button>
+              <button type="button" class="admin-icon-btn admin-icon-btn--danger" data-remove aria-label="Remove">&times;</button>
+            </span>
+          </li>
+        `;
+      }).join('');
+    };
+
+    imagesList.addEventListener('dragstart', e => {
+      const li = e.target.closest('.admin-edit__image');
+      if (!li) return;
+      dragIndex = Number(li.dataset.pos);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    imagesList.addEventListener('dragover', e => e.preventDefault());
+    imagesList.addEventListener('drop', e => {
+      e.preventDefault();
+      const li = e.target.closest('.admin-edit__image');
+      if (!li || dragIndex === null) return;
+      const dropIndex = Number(li.dataset.pos);
+      if (dropIndex === dragIndex) return;
+      const [moved] = items.splice(dragIndex, 1);
+      items.splice(dropIndex, 0, moved);
+      dragIndex = null;
+      renderImages();
+    });
+
+    imagesList.addEventListener('click', e => {
+      const li = e.target.closest('.admin-edit__image');
+      if (!li) return;
+      const pos = Number(li.dataset.pos);
+      if (e.target.closest('[data-move-left]') && pos > 0) {
+        [items[pos - 1], items[pos]] = [items[pos], items[pos - 1]];
+        renderImages();
+      } else if (e.target.closest('[data-move-right]') && pos < items.length - 1) {
+        [items[pos + 1], items[pos]] = [items[pos], items[pos + 1]];
+        renderImages();
+      } else if (e.target.closest('[data-remove]')) {
+        items.splice(pos, 1);
+        renderImages();
+      }
+    });
+
+    fileInput.addEventListener('change', () => {
+      Array.from(fileInput.files).forEach(file => items.push({ kind: 'new', file }));
+      fileInput.value = '';
+      renderImages();
+    });
+
+    if (workId) {
+      heading.textContent = 'Edit Work';
+      const data = await fetch('/admin-api/works.php').then(r => r.json());
+      const work = (data.works || []).find(w => String(w.id) === String(workId));
+      if (!work) {
+        errorEl.textContent = 'Work not found.';
+        errorEl.classList.remove('rfp-hidden');
+      } else {
+        idInput.value = work.id;
+        brandInput.value = work.brand_name;
+        categoryInput.value = work.category;
+        descriptionInput.value = work.description;
+        clientUrlInput.value = work.client_url || '';
+        items = work.images.map(img => ({ kind: 'existing', id: img.id, path: img.image_path }));
+        renderImages();
+      }
+    }
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      errorEl.classList.add('rfp-hidden');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Saving…';
+
+      const fd = new FormData();
+      if (idInput.value) fd.append('id', idInput.value);
+      fd.append('brand_name', brandInput.value.trim());
+      fd.append('category', categoryInput.value.trim());
+      fd.append('description', descriptionInput.value.trim());
+      fd.append('client_url', clientUrlInput.value.trim());
+
+      const keepIds = items.filter(item => item.kind === 'existing').map(item => item.id);
+      fd.append('image_order', JSON.stringify(keepIds));
+      items.filter(item => item.kind === 'new').forEach(item => fd.append('images[]', item.file));
+
+      try {
+        const res = await fetch('/admin-api/work-save.php', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (data.success) {
+          window.location.href = '/admin/dashboard';
+        } else {
+          errorEl.textContent = data.message || 'Something went wrong.';
+          errorEl.classList.remove('rfp-hidden');
+        }
+      } catch (err) {
+        errorEl.textContent = 'Something went wrong. Please try again.';
+        errorEl.classList.remove('rfp-hidden');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Save';
+      }
+    });
+  });
+</script>

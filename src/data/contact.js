@@ -7,8 +7,8 @@ export const contact = {
   location: 'Toronto, Canada',
   social: {
     instagram: 'https://instagram.com/obviusdigital',
-    facebook: 'https://facebook.com/[PLACEHOLDER_FACEBOOK]',
-    linkedin: 'https://linkedin.com/company/[PLACEHOLDER_LINKEDIN]',
-    youtube: 'https://youtube.com/@[PLACEHOLDER_YOUTUBE]',
+    facebook: 'https://www.facebook.com/share/1Kq76Q5Ddm/',
+    linkedin: 'https://www.linkedin.com/company/obvius-digital/',
+    youtube: 'https://youtube.com/@obviusdigital?si=kUBsFW_amg7kB-yp',
   },
 };

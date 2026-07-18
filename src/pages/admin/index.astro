@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Manager Login - Portfolio Admin" description="Log in to manage the Our Work portfolio." noindex>
+  <section class="admin-login section">
+    <div class="container container--narrow">
+      <span class="section-label">Portfolio Admin</span>
+      <h1 class="section-heading">Manager Login</h1>
+
+      <form id="admin-request-form" class="admin-login__form">
+        <p class="rfp-helper">Enter your email and we'll send a one-time login code.</p>
+        <div class="rfp-field-group">
+          <label for="admin-email">Email</label>
+          <input type="email" id="admin-email" name="email" class="rfp-input" required autocomplete="email">
+          <span class="rfp-field-error" id="admin-request-error"></span>
+        </div>
+        <button type="submit" id="admin-request-code" class="rfp-btn-primary admin-login__submit">Login</button>
+      </form>
+
+      <form id="admin-verify-form" class="admin-login__form rfp-hidden">
+        <p class="rfp-helper" id="admin-verify-helper">Check your email for a 4-character code.</p>
+        <div class="rfp-field-group">
+          <label for="admin-code">Login Code</label>
+          <input type="text" id="admin-code" name="code" class="rfp-input admin-login__code-input" maxlength="4" autocomplete="one-time-code" required>
+          <span class="rfp-field-error" id="admin-verify-error"></span>
+        </div>
+        <button type="submit" id="admin-verify-submit" class="rfp-btn-primary admin-login__submit">Log In</button>
+        <button type="button" id="admin-resend-code" class="admin-login__resend">Resend code</button>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const requestForm   = document.getElementById('admin-request-form');
+    const emailInput      = document.getElementById('admin-email');
+    const requestBtn        = document.getElementById('admin-request-code');
+    const requestError        = document.getElementById('admin-request-error');
+    const verifyForm            = document.getElementById('admin-verify-form');
+    const codeInput             = document.getElementById('admin-code');
+    const verifyError             = document.getElementById('admin-verify-error');
+    const verifySubmit              = document.getElementById('admin-verify-submit');
+    const resendBtn                   = document.getElementById('admin-resend-code');
+
+    // Already logged in? Skip straight to the dashboard.
+    fetch('/admin-api/session.php')
+      .then(r => r.json())
+      .then(data => { if (data.authenticated) window.location.href = '/admin/dashboard'; })
+      .catch(() => {});
+
+    const requestCode = async () => {
+      if (!emailInput.value) {
+        emailInput.reportValidity();
+        return;
+      }
+
+      requestError.textContent = '';
+      requestBtn.disabled = true;
+      requestBtn.textContent = 'Sending…';
+
+      try {
+        const res = await fetch('/admin-api/request-code.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: emailInput.value.trim() }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          requestForm.classList.add('rfp-hidden');
+          verifyForm.classList.remove('rfp-hidden');
+          codeInput.focus();
+        } else {
+          requestError.textContent = data.message || 'Could not send a code. Please try again.';
+        }
+      } catch (err) {
+        requestError.textContent = 'Something went wrong. Please try again.';
+      } finally {
+        requestBtn.disabled = false;
+        requestBtn.textContent = 'Login';
+      }
+    };
+
+    requestForm.addEventListener('submit', e => {
+      e.preventDefault();
+      requestCode();
+    });
+    resendBtn.addEventListener('click', requestCode);
+
+    codeInput.addEventListener('input', () => {
+      codeInput.value = codeInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4);
+    });
+
+    verifyForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      verifyError.textContent = '';
+      verifySubmit.disabled = true;
+      verifySubmit.textContent = 'Logging in…';
+
+      try {
+        const res = await fetch('/admin-api/verify-code.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: codeInput.value, email: emailInput.value.trim() }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          window.location.href = '/admin/dashboard';
+        } else {
+          verifyError.textContent = data.message || 'Invalid or expired code.';
+        }
+      } catch (err) {
+        verifyError.textContent = 'Something went wrong. Please try again.';
+      } finally {
+        verifySubmit.disabled = false;
+        verifySubmit.textContent = 'Log In';
+      }
+    });
+  });
+</script>

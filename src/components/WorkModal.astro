@@ -1,0 +1,150 @@
+---
+// WorkModal.astro - "book spread" case-study modal, opened by calling window.openWorkModal(work)
+// work shape: { brandName, category, description, images: string[], clientUrl: string|null }
+---
+
+<div id="work-modal" class="rfp-modal-overlay work-modal-overlay rfp-modal-closed" aria-hidden="true" role="dialog" aria-labelledby="work-modal-title">
+  <div class="work-modal-container">
+    <button type="button" id="work-modal-close" class="rfp-close-btn work-modal-close" aria-label="Close">&times;</button>
+
+    <div class="work-modal-spread">
+      <div class="work-modal-gallery">
+        <div class="work-modal-gallery-track" id="work-modal-track"></div>
+
+        <button type="button" class="work-modal-nav work-modal-nav--prev" id="work-modal-prev" aria-label="Previous image">&#8249;</button>
+        <button type="button" class="work-modal-nav work-modal-nav--next" id="work-modal-next" aria-label="Next image">&#8250;</button>
+
+        <div class="work-modal-dots" id="work-modal-dots"></div>
+      </div>
+
+      <div class="work-modal-spine" aria-hidden="true"></div>
+
+      <div class="work-modal-copy">
+        <span class="work-card__tag work-modal-tag" id="work-modal-tag"></span>
+        <h2 class="work-modal-title" id="work-modal-title"></h2>
+        <p class="work-modal-description" id="work-modal-description"></p>
+        <a href="#" id="work-modal-link" class="rfp-btn-primary work-modal-link work-modal-link--hidden" target="_blank" rel="noopener noreferrer">Visit Site &rarr;</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal       = document.getElementById('work-modal');
+    const closeBtn     = document.getElementById('work-modal-close');
+    const track         = document.getElementById('work-modal-track');
+    const prevBtn       = document.getElementById('work-modal-prev');
+    const nextBtn       = document.getElementById('work-modal-next');
+    const dotsEl        = document.getElementById('work-modal-dots');
+    const tagEl          = document.getElementById('work-modal-tag');
+    const titleEl        = document.getElementById('work-modal-title');
+    const descriptionEl  = document.getElementById('work-modal-description');
+    const linkEl         = document.getElementById('work-modal-link');
+
+    if (!modal) return;
+
+    const escapeHtml = str => String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    let images = [];
+    let currentIndex = 0;
+    let lastFocusedEl = null;
+
+    const renderSlide = () => {
+      track.style.transform = `translateX(-${currentIndex * 100}%)`;
+      dotsEl.querySelectorAll('.work-modal-dot').forEach((dot, idx) => {
+        dot.classList.toggle('work-modal-dot--active', idx === currentIndex);
+      });
+    };
+
+    const goTo = index => {
+      currentIndex = (index + images.length) % images.length;
+      renderSlide();
+    };
+
+    prevBtn.addEventListener('click', () => goTo(currentIndex - 1));
+    nextBtn.addEventListener('click', () => goTo(currentIndex + 1));
+
+    /* ── Touch swipe ── */
+    let touchStartX = 0;
+    track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend', e => {
+      const delta = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(delta) < 40) return;
+      goTo(delta < 0 ? currentIndex + 1 : currentIndex - 1);
+    }, { passive: true });
+
+    /* ── Open / close ── */
+    const openModal = () => {
+      lastFocusedEl = document.activeElement;
+      modal.classList.remove('rfp-modal-closed');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+    };
+
+    const closeModal = () => {
+      modal.classList.add('rfp-modal-closed');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if (lastFocusedEl instanceof HTMLElement) lastFocusedEl.focus();
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => {
+      if (modal.classList.contains('rfp-modal-closed')) return;
+      if (e.key === 'Escape') closeModal();
+      if (e.key === 'ArrowLeft') goTo(currentIndex - 1);
+      if (e.key === 'ArrowRight') goTo(currentIndex + 1);
+    });
+
+    /* ── Populate + open with a work item ── */
+    window.openWorkModal = work => {
+      images = Array.isArray(work.images) && work.images.length ? work.images : (work.logo ? [work.logo] : []);
+      currentIndex = 0;
+
+      const safeBrandName = escapeHtml(work.brandName || '');
+      track.innerHTML = images
+        .map(src => `<div class="work-modal-slide"><img src="${escapeHtml(src)}" alt="${safeBrandName} project photo" loading="lazy"></div>`)
+        .join('');
+
+      dotsEl.innerHTML = images
+        .map((_, idx) => `<button type="button" class="work-modal-dot${idx === 0 ? ' work-modal-dot--active' : ''}" aria-label="Go to image ${idx + 1}"></button>`)
+        .join('');
+      dotsEl.querySelectorAll('.work-modal-dot').forEach((dot, idx) => dot.addEventListener('click', () => goTo(idx)));
+
+      const multiImage = images.length > 1;
+      prevBtn.classList.toggle('work-modal-nav--hidden', !multiImage);
+      nextBtn.classList.toggle('work-modal-nav--hidden', !multiImage);
+      dotsEl.classList.toggle('work-modal-dots--hidden', !multiImage);
+
+      tagEl.textContent = work.category || '';
+      titleEl.textContent = work.brandName || '';
+      descriptionEl.textContent = work.description || '';
+
+      if (work.clientUrl) {
+        linkEl.href = work.clientUrl;
+        linkEl.classList.remove('work-modal-link--hidden');
+      } else {
+        linkEl.classList.add('work-modal-link--hidden');
+      }
+
+      renderSlide();
+      openModal();
+    };
+
+    /* ── Event delegation: any element with data-work-trigger + data-work JSON opens the modal ── */
+    document.addEventListener('click', e => {
+      const trigger = e.target.closest('[data-work-trigger]');
+      if (!trigger) return;
+      const raw = trigger.getAttribute('data-work');
+      if (!raw) return;
+      try {
+        window.openWorkModal(JSON.parse(raw));
+      } catch (err) {
+        console.error('Invalid work data on trigger:', err);
+      }
+    });
+  });
+</script>

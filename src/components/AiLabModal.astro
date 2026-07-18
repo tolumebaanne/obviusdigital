@@ -1,0 +1,118 @@
+---
+// AiLabModal.astro - newsletter signup popup for the AI-Powered Content Lab "Coming Soon" tile
+---
+
+<div id="ai-lab-modal" class="rfp-modal-overlay rfp-modal-closed" aria-hidden="true" role="dialog" aria-labelledby="ai-lab-modal-title">
+  <div class="rfp-modal-container ai-lab-modal-container">
+    <button id="ai-lab-close" class="rfp-close-btn" aria-label="Close modal">&times;</button>
+
+    <div id="ai-lab-form-view">
+      <h2 id="ai-lab-modal-title">Tell me more!</h2>
+      <p class="rfp-helper">Sign up to be notified when our latest AI-powered tools and features drop.</p>
+
+      <form id="ai-lab-form">
+        <div class="rfp-field-group">
+          <label for="ai-lab-email" class="sr-only">Email address</label>
+          <input type="email" id="ai-lab-email" name="email" class="rfp-input" placeholder="e.g., yourname@company.com" required>
+          <span class="rfp-field-error" id="ai-lab-email-error"></span>
+        </div>
+        <button type="submit" id="ai-lab-submit" class="rfp-btn-primary ai-lab-submit-btn">Subscribe to Our Newsletter</button>
+      </form>
+    </div>
+
+    <div id="ai-lab-success" class="rfp-success rfp-hidden">
+      <div class="rfp-success-icon">&#10003;</div>
+      <h3>You're on the list!</h3>
+      <p>We'll let you know as soon as new AI-powered tools and features drop.</p>
+      <button type="button" id="ai-lab-close-success" class="rfp-btn-primary mt-1">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal        = document.getElementById('ai-lab-modal');
+    const closeBtn      = document.getElementById('ai-lab-close');
+    const closeSucBtn   = document.getElementById('ai-lab-close-success');
+    const form          = document.getElementById('ai-lab-form');
+    const formView       = document.getElementById('ai-lab-form-view');
+    const successEl     = document.getElementById('ai-lab-success');
+    const emailInput    = document.getElementById('ai-lab-email');
+    const emailError    = document.getElementById('ai-lab-email-error');
+    const submitBtn     = document.getElementById('ai-lab-submit');
+
+    if (!modal) return;
+
+    const isValidEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+
+    const openModal = () => {
+      modal.classList.remove('rfp-modal-closed');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    };
+
+    const closeModal = () => {
+      modal.classList.add('rfp-modal-closed');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      // Reset view state
+      successEl.classList.add('rfp-hidden');
+      formView.classList.remove('rfp-hidden');
+      form.reset();
+      emailInput.classList.remove('rfp-input-error');
+      emailError.textContent = '';
+    };
+
+    document.querySelectorAll('[data-ai-lab-trigger]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        openModal();
+      });
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+    closeSucBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && !modal.classList.contains('rfp-modal-closed')) closeModal();
+    });
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+
+      emailInput.classList.remove('rfp-input-error');
+      emailError.textContent = '';
+
+      if (!isValidEmail(emailInput.value)) {
+        emailInput.classList.add('rfp-input-error');
+        emailError.textContent = 'Please enter a valid email address.';
+        return;
+      }
+
+      submitBtn.textContent = 'Subscribing…';
+      submitBtn.disabled = true;
+
+      try {
+        const res = await fetch('/contact.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: 'AI Lab Newsletter Signup',
+            email: emailInput.value.trim(),
+            signup_type: 'AI-Powered Content Lab newsletter',
+          }),
+        });
+        if (!res.ok) throw new Error('Server error');
+
+        formView.classList.add('rfp-hidden');
+        successEl.classList.remove('rfp-hidden');
+      } catch (err) {
+        console.error(err);
+        emailError.textContent = 'Something went wrong. Please try again.';
+      } finally {
+        submitBtn.textContent = 'Subscribe to Our Newsletter';
+        submitBtn.disabled = false;
+      }
+    });
+  });
+</script>

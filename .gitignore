@@ -17,6 +17,10 @@ pnpm-debug.log*
 .env
 .env.production
 
+# admin panel secrets and user-uploaded content — never committed
+public/admin-api/config.php
+public/uploads/
+
 # macOS-specific files
 .DS_Store
 
