@@ -1,8 +1,5 @@
 ---
 // HomeHero - homepage hero section
-import { works } from '../data/works.js';
-
-const shuffled = [...works].sort(() => Math.random() - 0.5);
 ---
 
 <section class="home-hero">
@@ -22,14 +19,37 @@ const shuffled = [...works].sort(() => Math.random() - 0.5);
     <!-- Work examples strip -->
     <div class="home-hero__work-strip">
       <span class="home-hero__work-label">Some of our work</span>
-      <div class="home-hero__work-cards">
-        {shuffled.slice(0, 3).map((work) => (
-          <div class="hero-work-card">
-            <span class="hero-work-card__cat">{work.category}</span>
-            <span class="hero-work-card__name">{work.brandName}</span>
-          </div>
-        ))}
-      </div>
+      <div class="home-hero__work-cards" id="home-hero-work-cards"></div>
     </div>
   </div>
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const cardsEl = document.getElementById('home-hero-work-cards');
+    if (!cardsEl) return;
+
+    const escapeHtml = str => String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const escapeAttr = str => JSON.stringify(str).replace(/'/g, '&#39;');
+
+    const render = works => {
+      cardsEl.innerHTML = works.slice(0, 3).map(work => `
+        <button type="button" class="hero-work-card" data-work-trigger data-work='${escapeAttr(work)}'>
+          <span class="hero-work-card__cat">${escapeHtml(work.category || '')}</span>
+          <span class="hero-work-card__name">${escapeHtml(work.brandName || '')}</span>
+        </button>
+      `).join('');
+    };
+
+    try {
+      let works = await fetch('/works-feed.php?page=home').then(r => r.json()).then(d => d.works || []);
+      // Nothing pinned to the homepage yet — fall back to the most recent published work
+      if (works.length === 0) {
+        works = await fetch('/works-feed.php').then(r => r.json()).then(d => d.works || []);
+      }
+      render(works);
+    } catch (err) {
+      console.error(err);
+    }
+  });
+</script>

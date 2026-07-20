@@ -220,6 +220,8 @@
   gap: 0.5rem;
   /* transition - matches trusted-by logo hover */
   transition: opacity var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+  /* cursor */
+  cursor: pointer;
 }
 
 .hero-work-card:hover {
@@ -597,6 +599,13 @@
   /* box model */
   max-width: 60ch;
   margin-bottom: var(--space-md);
+}
+
+.service-work__see-all {
+  /* box model */
+  margin-top: var(--space-md);
+  /* display */
+  display: inline-block;
 }
 
 .past-work__status {
@@ -2574,6 +2583,37 @@
   /* color */
   color: #1a7f37;
   background-color: rgba(26, 127, 55, 0.1);
+}
+
+.admin-edit__pages {
+  /* box model */
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+  /* display */
+  display: flex;
+  /* flexbox */
+  flex-wrap: wrap;
+}
+
+.admin-edit__pages-option {
+  /* text */
+  font-size: 0.875rem;
+  /* box model */
+  gap: 6px;
+  /* display */
+  display: flex;
+  /* flexbox */
+  align-items: center;
+  /* cursor */
+  cursor: pointer;
+}
+
+.admin-edit__pages-option input {
+  /* box model */
+  width: 16px;
+  height: 16px;
+  /* cursor */
+  cursor: pointer;
 }
 
 .admin-edit__publish-field label {

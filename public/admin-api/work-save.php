@@ -119,6 +119,20 @@ try {
         }
     }
 
+    // Page pins — replace the full set on every save
+    $pinnedPages = [];
+    if (isset($_POST['pages'])) {
+        $decoded = json_decode((string) $_POST['pages'], true);
+        if (is_array($decoded)) {
+            $pinnedPages = array_values(array_intersect($decoded, array_keys(PINNABLE_PAGES)));
+        }
+    }
+    $pdo->prepare('DELETE FROM work_pages WHERE work_id = ?')->execute([$workId]);
+    $pageStmt = $pdo->prepare('INSERT INTO work_pages (work_id, page_slug) VALUES (?, ?)');
+    foreach ($pinnedPages as $slug) {
+        $pageStmt->execute([$workId, $slug]);
+    }
+
     // New gallery uploads, appended after the kept images
     $nextOrder = count($keepIds);
     if (!empty($_FILES['images']) && is_array($_FILES['images']['tmp_name'])) {

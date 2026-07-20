@@ -45,6 +45,12 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           <input type="file" id="admin-edit-file-input" accept="image/jpeg,image/png,image/webp" multiple>
         </div>
 
+        <div class="rfp-field-group">
+          <label>Pin to Pages (optional)</label>
+          <p class="rfp-helper">The "Our Work" page always shows every published entry. Pin this one to also feature it on:</p>
+          <div class="admin-edit__pages" id="admin-edit-pages"></div>
+        </div>
+
         <div class="rfp-field-group admin-edit__publish-field">
           <label for="published-checkbox">
             <input type="checkbox" id="published-checkbox">
@@ -76,9 +82,26 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     const fileInput                  = document.getElementById('admin-edit-file-input');
     const thumbnailInput              = document.getElementById('thumbnail-input');
     const thumbnailPreview             = document.getElementById('admin-edit-thumbnail-preview');
-    const publishedCheckbox              = document.getElementById('published-checkbox');
-    const errorEl                          = document.getElementById('admin-edit-error');
-    const submitBtn                         = document.getElementById('admin-edit-submit');
+    const pagesContainer                  = document.getElementById('admin-edit-pages');
+    const publishedCheckbox                = document.getElementById('published-checkbox');
+    const errorEl                            = document.getElementById('admin-edit-error');
+    const submitBtn                           = document.getElementById('admin-edit-submit');
+
+    // Keep in sync with PINNABLE_PAGES in public/admin-api/lib/db.php
+    const PINNABLE_PAGES = {
+      'home': 'Home',
+      'web-dev': 'Web Design',
+      'production': '360 Media Production',
+      'digital-marketing': 'Digital Marketing',
+      'consulting': 'Consulting',
+      'training': 'Training',
+    };
+    pagesContainer.innerHTML = Object.entries(PINNABLE_PAGES).map(([slug, label]) => `
+      <label class="admin-edit__pages-option">
+        <input type="checkbox" value="${slug}">
+        ${label}
+      </label>
+    `).join('');
 
     const sessionRes = await fetch('/admin-api/session.php').then(r => r.json()).catch(() => ({ authenticated: false }));
     if (!sessionRes.authenticated) {
@@ -183,6 +206,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         items = work.images.map(img => ({ kind: 'existing', id: img.id, path: img.image_path }));
         currentThumbnailPath = work.thumbnail || null;
         publishedCheckbox.checked = !!work.is_published;
+        const pinnedPages = Array.isArray(work.pages) ? work.pages : [];
+        pagesContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+          cb.checked = pinnedPages.includes(cb.value);
+        });
         renderImages();
         renderThumbnailPreview();
       }
@@ -201,6 +228,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       fd.append('description', descriptionInput.value.trim());
       fd.append('client_url', clientUrlInput.value.trim());
       fd.append('is_published', publishedCheckbox.checked ? '1' : '0');
+      const selectedPages = Array.from(pagesContainer.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+      fd.append('pages', JSON.stringify(selectedPages));
       if (thumbnailFile) fd.append('thumbnail', thumbnailFile);
 
       const keepIds = items.filter(item => item.kind === 'existing').map(item => item.id);

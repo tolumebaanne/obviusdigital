@@ -3,6 +3,18 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../config.php';
 
+// Pages (beyond the /work grid, which always shows everything) that a work
+// item can be pinned to. Keep in sync with the checkboxes in
+// src/pages/admin/edit.astro.
+const PINNABLE_PAGES = [
+    'home' => 'Home',
+    'web-dev' => 'Web Design',
+    'production' => '360 Media Production',
+    'digital-marketing' => 'Digital Marketing',
+    'consulting' => 'Consulting',
+    'training' => 'Training',
+];
+
 function get_pdo(): PDO
 {
     static $pdo = null;

@@ -26,7 +26,18 @@
     const escapeAttr = str => JSON.stringify(str).replace(/'/g, '&#39;');
 
     let works = [];
-    let activeCategory = 'All';
+    const urlCategory = new URLSearchParams(window.location.search).get('category');
+    let activeCategory = urlCategory || 'All';
+
+    const updateUrl = () => {
+      const url = new URL(window.location.href);
+      if (activeCategory === 'All') {
+        url.searchParams.delete('category');
+      } else {
+        url.searchParams.set('category', activeCategory);
+      }
+      history.replaceState(null, '', url);
+    };
 
     const renderCards = () => {
       const filtered = activeCategory === 'All' ? works : works.filter(w => w.category === activeCategory);
@@ -68,6 +79,7 @@
       const btn = e.target.closest('[data-category]');
       if (!btn) return;
       activeCategory = btn.dataset.category;
+      updateUrl();
       renderFilters();
       renderCards();
     });

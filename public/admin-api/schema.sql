@@ -63,3 +63,15 @@ CREATE TABLE IF NOT EXISTS work_images (
   sort_order INT NOT NULL DEFAULT 0,
   FOREIGN KEY (work_id) REFERENCES works(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Which pages (beyond the /work grid, which always shows everything) a work
+-- item is pinned to — e.g. the homepage strip. page_slug values used by the
+-- site today: 'home', 'web-dev', 'production', 'digital-marketing',
+-- 'consulting', 'training'.
+CREATE TABLE IF NOT EXISTS work_pages (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  work_id INT NOT NULL,
+  page_slug VARCHAR(100) NOT NULL,
+  FOREIGN KEY (work_id) REFERENCES works(id) ON DELETE CASCADE,
+  UNIQUE KEY uniq_work_page (work_id, page_slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

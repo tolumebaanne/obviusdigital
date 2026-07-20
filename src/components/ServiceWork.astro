@@ -1,0 +1,75 @@
+---
+// ServiceWork - shows work items pinned to this service's page (via the
+// admin "Pin to Pages" checkboxes), with a link through to the full,
+// category-filtered view on /work.
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+
+// Keep in sync with the `category` values used on /work — only services
+// with a clean 1:1 category match get a filtered link; others link to the
+// unfiltered /work page.
+const CATEGORY_BY_SLUG: Record<string, string> = {
+  'web-dev': 'Web Design',
+  'production': '360 Media Production',
+  'digital-marketing': 'Digital Marketing',
+};
+const category = CATEGORY_BY_SLUG[slug];
+const workLink = category ? `/work?category=${encodeURIComponent(category)}` : '/work';
+---
+
+<section class="past-work section" data-page-slug={slug}>
+  <div class="container">
+    <span class="section-label">Our Work</span>
+    <h2 class="section-heading">See It In Action</h2>
+    <p class="section-intro">A look at real projects that fall under this service.</p>
+    <div class="past-work__grid" id="service-work-grid">
+      <p class="past-work__status" id="service-work-status">Loading&hellip;</p>
+    </div>
+    <a href={workLink} class="btn btn--outline-red service-work__see-all">See all our work &rarr;</a>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const section = document.querySelector('.past-work[data-page-slug]');
+    if (!section) return;
+    const slug = section.getAttribute('data-page-slug');
+    const grid = document.getElementById('service-work-grid');
+    const status = document.getElementById('service-work-status');
+
+    const escapeHtml = str => String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const escapeAttr = str => JSON.stringify(str).replace(/'/g, '&#39;');
+
+    try {
+      const res = await fetch(`/works-feed.php?page=${encodeURIComponent(slug)}`);
+      const data = await res.json();
+      const works = data.works || [];
+
+      if (works.length === 0) {
+        if (status) status.textContent = "We're adding examples of this work soon — check back shortly.";
+        return;
+      }
+
+      grid.innerHTML = works.map(work => {
+        const thumbnail = work.thumbnail || (Array.isArray(work.images) && work.images.length ? work.images[0] : '');
+        const brandName = escapeHtml(work.brandName || '');
+        const category = escapeHtml(work.category || '');
+        return `
+          <button type="button" class="work-card" data-work-trigger data-work='${escapeAttr(work)}'>
+            <div class="work-card__logo-area">
+              <img src="${escapeHtml(thumbnail)}" alt="${brandName} project photo" class="work-card__logo" loading="lazy">
+            </div>
+            <span class="work-card__tag">${category}</span>
+            <h3 class="work-card__name">${brandName}</h3>
+          </button>
+        `;
+      }).join('');
+    } catch (err) {
+      console.error(err);
+      if (status) status.textContent = "We couldn't load this right now — please refresh or check back shortly.";
+    }
+  });
+</script>

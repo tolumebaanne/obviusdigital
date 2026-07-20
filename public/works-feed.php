@@ -12,7 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 try {
     $pdo = get_pdo();
-    $works = $pdo->query('SELECT id, brand_name AS brandName, category, description, client_url AS clientUrl, thumbnail_path AS thumbnail FROM works WHERE is_published = 1 ORDER BY sort_order ASC, id DESC')->fetchAll();
+
+    $pageSlug = isset($_GET['page']) ? trim((string) $_GET['page']) : '';
+    if ($pageSlug !== '' && isset(PINNABLE_PAGES[$pageSlug])) {
+        $stmt = $pdo->prepare('SELECT id, brand_name AS brandName, category, description, client_url AS clientUrl, thumbnail_path AS thumbnail FROM works WHERE is_published = 1 AND id IN (SELECT work_id FROM work_pages WHERE page_slug = ?) ORDER BY sort_order ASC, id DESC');
+        $stmt->execute([$pageSlug]);
+        $works = $stmt->fetchAll();
+    } else {
+        $works = $pdo->query('SELECT id, brand_name AS brandName, category, description, client_url AS clientUrl, thumbnail_path AS thumbnail FROM works WHERE is_published = 1 ORDER BY sort_order ASC, id DESC')->fetchAll();
+    }
 
     $imgStmt = $pdo->prepare('SELECT image_path FROM work_images WHERE work_id = ? ORDER BY sort_order ASC, id ASC');
     foreach ($works as &$work) {

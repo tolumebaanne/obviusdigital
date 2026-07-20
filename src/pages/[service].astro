@@ -4,6 +4,8 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import PageHero from '../components/PageHero.astro';
 import ServiceDetail from '../components/ServiceDetail.astro';
+import ServiceWork from '../components/ServiceWork.astro';
+import WorkModal from '../components/WorkModal.astro';
 import ServicesContactForm from '../components/ServicesContactForm.astro';
 import { servicePages } from '../data/servicePages.js';
 
@@ -25,6 +27,8 @@ const { page } = Astro.props;
     tagline={page.pageHero.tagline}
   />
   <ServiceDetail serviceName={page.serviceName} />
+  <ServiceWork slug={page.slug} />
+  <WorkModal />
   <Footer slot="footer" />
   <ServicesContactForm />
 </BaseLayout>
