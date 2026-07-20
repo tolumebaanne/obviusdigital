@@ -21,10 +21,12 @@ import { founders } from '../data/founders.js';
           <p class="founder-card__message">
             {founder.message}
           </p>
-          <div class="founder-card__socials">
-            <a href={founder.instagram} target="_blank" rel="noopener noreferrer" aria-label={`${founder.name} on Instagram`}>Instagram</a>
-            <a href={founder.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${founder.name} on LinkedIn`}>LinkedIn</a>
-          </div>
+          {(founder.instagram || founder.linkedin) && (
+            <div class="founder-card__socials">
+              {founder.instagram && <a href={founder.instagram} target="_blank" rel="noopener noreferrer" aria-label={`${founder.name} on Instagram`}>Instagram</a>}
+              {founder.linkedin && <a href={founder.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${founder.name} on LinkedIn`}>LinkedIn</a>}
+            </div>
+          )}
         </div>
       ))}
     </div>

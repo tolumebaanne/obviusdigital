@@ -26,7 +26,7 @@ const { page } = Astro.props;
     heading={page.pageHero.heading}
     tagline={page.pageHero.tagline}
   />
-  <ServiceDetail serviceName={page.serviceName} />
+  <ServiceDetail serviceName={page.serviceName} body={page.body} />
   <ServiceWork slug={page.slug} />
   <WorkModal />
   <Footer slot="footer" />

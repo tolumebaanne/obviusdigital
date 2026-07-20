@@ -6,7 +6,6 @@ import PageHero from '../components/PageHero.astro';
 import PastWork from '../components/PastWork.astro';
 import WorkModal from '../components/WorkModal.astro';
 import WorkCTA from '../components/WorkCTA.astro';
-import Reviews from '../components/Reviews.astro';
 import ContactForm from '../components/ContactForm.astro';
 ---
 
@@ -20,16 +19,11 @@ import ContactForm from '../components/ContactForm.astro';
     label="Our Work"
     heading="Built With Intention."
     tagline="A look at some of the projects we've had the privilege of working on."
-  >
-    <div style="margin-top: 2rem; width: 100%; height: 160px; background: rgba(255,255,255,0.04); border-radius: 8px; border: 1px dashed rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;">
-      <span style="color: rgba(255,255,255,0.25); font-size: 0.8125rem; letter-spacing: 0.08em; text-transform: uppercase;">[PLACEHOLDER] Hero Graphic</span>
-    </div>
-  </PageHero>
+  />
 
   <PastWork />
   <WorkModal />
   <WorkCTA />
-  <Reviews />
   <ContactForm />
 
   <Footer slot="footer" />
